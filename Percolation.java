@@ -22,16 +22,16 @@ public class Percolation {
 
   // open site (row i, column j) if it is not open already
   public void open(int i, int j) {
-    if (isOpen(int i, int j)) return;
+    if (isOpen(i, j)) return;
     int aSite = coordinatesToIndex(i, j);
     sites[aSite] = true;
     // assuming i is a valid index,
     // if it's in a top row, connect it to virtual top site
     if (i == 0)
-    { uf.connect(topSite, aSite); }
+    { uf.union(topSite, aSite); }
     // if i is in a bottom row, connect it to virtual bottom site
     else if (i == initialN - 1)
-    { uf.connect(bottomSite, aSite); }
+    { uf.union(bottomSite, aSite); }
 
     // connect with all valid & open neighbors
 
@@ -49,22 +49,27 @@ public class Percolation {
   private void connectNeighbors(int i, int j, int aSite) {
     // connect with a given neighbor
     if (isValid(i, j) && isOpen(i, j)) {
-      int neighborSite = coordinatesToIndexi, j);
-      uf.connect(aSite, neighborSite);
+      int neighborSite = coordinatesToIndex(i, j);
+      uf.union(aSite, neighborSite);
     }
   }
 
   // checks whether row i and column j are valid
-  // private boolean isValid(int i, int j)
+  private boolean isValid(int i, int j) {
+    return (i >= 0 && i < initialN)
+        && (j >= 0 && j < initialN);
+  }
 
   // is site (row i, column j) open?
   public boolean isOpen(int i, int j) {
+    if (!isValid(i, j)) throw new java.lang.IndexOutOfBoundsException();
     int aSite = coordinatesToIndex(i, j);
     return sites[aSite];
   }
 
   // is site (row i, column j) full?
   public boolean isFull(int i, int j) {
+    if (!isValid(i, j)) throw new java.lang.IndexOutOfBoundsException();
     int aSite = coordinatesToIndex(i, j);
     return uf.connected(topSite, aSite);
   }
