@@ -27,10 +27,10 @@ public class Percolation {
     sites[aSite] = true;
     // assuming i is a valid index,
     // if it's in a top row, connect it to virtual top site
-    if (i == 0)
+    if (i == 1)
     { uf.union(topSite, aSite); }
     // if i is in a bottom row, connect it to virtual bottom site
-    else if (i == initialN - 1)
+    else if (i == initialN)
     { uf.union(bottomSite, aSite); }
 
     // connect with all valid & open neighbors
@@ -56,8 +56,8 @@ public class Percolation {
 
   // checks whether row i and column j are valid
   private boolean isValid(int i, int j) {
-    return (i >= 0 && i < initialN)
-        && (j >= 0 && j < initialN);
+    return (i > 0 && i <= initialN)
+        && (j > 0 && j <= initialN);
   }
 
   // is site (row i, column j) open?
