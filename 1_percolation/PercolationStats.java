@@ -31,29 +31,29 @@ public class PercolationStats {
   }
 
   // sample mean of percolation threshold
-  public double mean()
+  public static double mean()
   { return StdStats.mean(thresholds); }
 
   // sample standard deviation of percolation threshold
-  public double stddev()
+  public static double stddev()
   { return StdStats.stddev(thresholds); }
 
   // low endpoint of 95% confidence interval
-  public double confidenceLo()
+  public static double confidenceLo()
   { return mean() - (1.96 * stddev() / Math.sqrt(initialT)); }
 
   // high endpoint of 95% confidence interval
-  public double confidenceHi()
+  public static double confidenceHi()
   { return mean() + (1.96 * stddev() / Math.sqrt(initialT)); }
 
   // test client
   public static void main(String[] args) {
-    StdOut.print("Creating a PercolationStats object...");
-    PercolationStats ps = new PercolationStats(20, 10);
-    StdOut.println("Object successfully created.");
-    for (int i = 0; i < initialT; i++) {
-      double t = thresholds[i];
-      StdOut.println(i + "th threshold: " + t);
-    }
+    int N = Integer.parseInt(args[0]);
+    int T = Integer.parseInt(args[1]);
+    PercolationStats ps = new PercolationStats(N, T);
+    StdOut.println("mean\t\t\t= " + mean());
+    StdOut.println("stddev\t\t\t= " + stddev());
+    StdOut.println("95% confidence interval = "
+                +  confidenceLo() + ", " + confidenceHi());
   }
 }
