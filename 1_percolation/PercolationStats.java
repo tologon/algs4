@@ -3,20 +3,18 @@ import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
-  private Percolation p;
-  private int numOfSites;
   private int initialT;
   private double[] thresholds;
 
   // perform T independent experiments on an N-by-N grid
   public PercolationStats(int N, int T) {
     if (N <= 0 || T <= 0) throw new IllegalArgumentException();
-    numOfSites = N * N;
+    int numOfSites = N * N;
     initialT = T;
     int openSites;
     thresholds = new double[initialT];
     for (int i = 0; i < initialT; i++) {
-      p = new Percolation(N);
+      Percolation p = new Percolation(N);
       openSites = 0;
       while (!p.percolates()) {
         int randomRow = StdRandom.uniform(1, N + 1);
