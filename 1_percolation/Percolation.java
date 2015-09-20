@@ -1,5 +1,6 @@
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.In;
 
 public class Percolation {
   private WeightedQuickUnionUF uf; // union-find data structure
@@ -15,9 +16,6 @@ public class Percolation {
     sites = new boolean[initialN * initialN + 2];
     topSite = initialN * initialN;
     bottomSite = topSite + 1;
-    // set virtual top & bottom to be open sites
-    sites[topSite] = true;
-    sites[bottomSite] = true;
   }
 
   // open site (row i, column j) if it is not open already
@@ -30,7 +28,7 @@ public class Percolation {
     if (i == 1)
     { uf.union(topSite, aSite); }
     // if i is in a bottom row, connect it to virtual bottom site
-    else if (i == initialN)
+    if (i == initialN)
     { uf.union(bottomSite, aSite); }
 
     // connect with all valid & open neighbors
@@ -83,11 +81,14 @@ public class Percolation {
 
   // test client (optional)
   public static void main(String[] args) {
-    StdOut.println("Testing the constructor of Percolation class.");
-    StdOut.print("Creating a Percolation object with 9 sites... ");
-    Percolation p = new Percolation(3);
-    StdOut.println("The object is successfully created.");
-
-    StdOut.println("Does the system percolate?: " + p.percolates());
+    In in = new In(args[0]);  // input file
+    int N = in.readInt();     // N-by-N grid
+    Percolation p = new Percolation(N);
+    while (!in.isEmpty()) {
+      int i = in.readInt();
+      int j = in.readInt();
+      p.open(i, j);
+    }
+    StdOut.println("System percolates: " + p.percolates());
   }
 }
