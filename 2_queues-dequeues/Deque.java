@@ -6,10 +6,9 @@ public class Deque<Item> {
   private int numOfItems;
 
   private class Node {
-    // TODO implement double-linked list
-
     Item item;
     Node next;
+    Node previous;
   }
 
   // construct an empty deque
@@ -29,41 +28,54 @@ public class Deque<Item> {
 
   // add the item to the front
   public void addFirst(Item item) {
+    if (item == null) throw new IllegalArgumentException();
+
     Node oldFirst = first;
     first = new Node();
     first.item = item;
     first.next = oldFirst;
     if (isEmpty()) last = first;
+    else           oldFirst.previous = first;
+    first.previous = null;
     numOfItems++;
   }
 
   // add the item to the end
   public void addLast(Item item) {
+    if (item == null) throw new IllegalArgumentException();
+
     Node oldLast = last;
     last = new Node();
     last.item = item;
     last.next = null;
     if (isEmpty()) first = last;
-    else           oldLast.next = last;
+    else {
+      oldLast.next = last;
+      last.previous = oldLast;
     numOfItems++;
   }
 
   // remove and return the item from the front
   public Item removeFirst() {
-    // TODO implement count + refine remove
+    if (isEmpty()) throw new ChangeThisException();
 
+    numOfItems--;
     Item item = first.item;
     first = first.next;
+    if (isEmpty())  last = null;
+    else            first.previous = null;
     return item;
   }
 
   // remove and return the item from the end
   public Item removeLast() {
-    // TODO implement count + refine remove
+    if (isEmpty()) throw new ChangeThisException();
 
+    numOfItems--;
     Item item = last.item;
     last = last.previous;
-    if (isEmpty()) last = null;
+    if (isEmpty()) first = null;
+    else           last.next = null;
   }
 
   // return an iterator over items in order from front to end
