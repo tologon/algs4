@@ -1,4 +1,6 @@
-public class Deque<Item> implements Iterable<Item> {
+import edu.princeton.cs.algs4.StdOut;
+
+public class Deque<Item> {
   private Node first;
   private Node last;
   private int numOfItems;
@@ -45,14 +47,28 @@ public class Deque<Item> implements Iterable<Item> {
   }
 
   // remove and return the item from the front
-  public Item removeFirst()
+  // public Item removeFirst()
 
   // remove and return the item from the end
-  public Item removeLast()
+  // public Item removeLast()
 
   // return an iterator over items in order from front to end
-  public Iterator<Item> iterator()
+  // public Iterator<Item> iterator()
 
   // unit testing
-  public static void main(String[] args)
+  public static void main(String[] args) {
+    StdOut.print("Creating an empty Deque... ");
+    Deque<String> d = new Deque<>();
+    d.addFirst("phone");
+    d.addLast("laptop");
+    d.addFirst("love");
+    d.addLast("tail");
+    d.addFirst("head");
+
+    StdOut.println("Items in the deque.");
+    while (d.first != null) {
+      StdOut.println(d.first.item);
+      d.first = d.first.next;
+    }
+  }
 }
