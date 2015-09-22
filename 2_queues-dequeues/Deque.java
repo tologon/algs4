@@ -6,6 +6,8 @@ public class Deque<Item> {
   private int numOfItems;
 
   private class Node {
+    // TODO implement double-linked list
+
     Item item;
     Node next;
   }
@@ -47,10 +49,22 @@ public class Deque<Item> {
   }
 
   // remove and return the item from the front
-  // public Item removeFirst()
+  public Item removeFirst() {
+    // TODO implement count + refine remove
+
+    Item item = first.item;
+    first = first.next;
+    return item;
+  }
 
   // remove and return the item from the end
-  // public Item removeLast()
+  public Item removeLast() {
+    // TODO implement count + refine remove
+
+    Item item = last.item;
+    last = last.previous;
+    if (isEmpty()) last = null;
+  }
 
   // return an iterator over items in order from front to end
   // public Iterator<Item> iterator()
