@@ -1,6 +1,7 @@
 import edu.princeton.cs.algs4.StdOut;
+import java.util.Iterator;
 
-public class Deque<Item> {
+public class Deque<Item> implements Iterable<Item> {
   private Node first;
   private Node last;
   private int numOfItems;
@@ -81,7 +82,15 @@ public class Deque<Item> {
   }
 
   // return an iterator over items in order from front to end
-  // public Iterator<Item> iterator()
+  public Iterator<Item> iterator()
+  { return new DequeIterator(); }
+
+  private class DequeIterator<Item> implements Iterator<Item> {
+    Node front;
+
+    public DequeIterator()
+    { front = first; }
+  }
 
   // unit testing
   public static void main(String[] args) {
