@@ -28,7 +28,7 @@ public class Deque<Item> {
 
   // add the item to the front
   public void addFirst(Item item) {
-    if (item == null) throw new IllegalArgumentException();
+    if (item == null) throw new NullPointerException();
 
     Node oldFirst = first;
     first = new Node();
@@ -42,7 +42,7 @@ public class Deque<Item> {
 
   // add the item to the end
   public void addLast(Item item) {
-    if (item == null) throw new IllegalArgumentException();
+    if (item == null) throw new NullPointerException();
 
     Node oldLast = last;
     last = new Node();
@@ -52,12 +52,13 @@ public class Deque<Item> {
     else {
       oldLast.next = last;
       last.previous = oldLast;
+    }
     numOfItems++;
   }
 
   // remove and return the item from the front
   public Item removeFirst() {
-    if (isEmpty()) throw new ChangeThisException();
+    if (isEmpty()) throw new java.util.NoSuchElementException();
 
     numOfItems--;
     Item item = first.item;
@@ -69,13 +70,14 @@ public class Deque<Item> {
 
   // remove and return the item from the end
   public Item removeLast() {
-    if (isEmpty()) throw new ChangeThisException();
+    if (isEmpty()) throw new java.util.NoSuchElementException();
 
     numOfItems--;
     Item item = last.item;
     last = last.previous;
     if (isEmpty()) first = null;
     else           last.next = null;
+    return item;
   }
 
   // return an iterator over items in order from front to end
@@ -91,10 +93,16 @@ public class Deque<Item> {
     d.addLast("tail");
     d.addFirst("head");
 
-    StdOut.println("Items in the deque.");
-    while (d.first != null) {
-      StdOut.println(d.first.item);
-      d.first = d.first.next;
+    // StdOut.println("Items in the deque (FIRST -> LAST).");
+    // while (d.first != null) {
+    //   StdOut.println(d.first.item);
+    //   d.first = d.first.next;
+    // }
+
+    StdOut.println("Items in the deque (LAST -> FIRST).");
+    while (d.last != null) {
+      StdOut.println(d.last.item);
+      d.last = d.last.previous;
     }
   }
 }
