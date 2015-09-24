@@ -1,4 +1,5 @@
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdRandom;
 import java.util.Iterator;
 
 public class Deque<Item> implements Iterable<Item> {
@@ -85,33 +86,47 @@ public class Deque<Item> implements Iterable<Item> {
   public Iterator<Item> iterator()
   { return new DequeIterator(); }
 
-  private class DequeIterator<Item> implements Iterator<Item> {
-    Node front;
+  private class DequeIterator implements Iterator<Item> {
+    Node current;
 
     public DequeIterator()
-    { front = first; }
+    { current = first; }
+
+    public Item next() {
+      if (!hasNext()) throw new java.util.NoSuchElementException();
+
+      Item item = current.item;
+      current = current.next;
+      return item;
+    }
+
+    public boolean hasNext()
+    { return current != null; }
+
+    public void remove()
+    { throw new IllegalArgumentException(); }
   }
 
   // unit testing
   public static void main(String[] args) {
-    StdOut.print("Creating an empty Deque... ");
     Deque<String> d = new Deque<>();
-    d.addFirst("phone");
-    d.addLast("laptop");
-    d.addFirst("love");
-    d.addLast("tail");
-    d.addFirst("head");
 
-    // StdOut.println("Items in the deque (FIRST -> LAST).");
-    // while (d.first != null) {
-    //   StdOut.println(d.first.item);
-    //   d.first = d.first.next;
-    // }
-
-    StdOut.println("Items in the deque (LAST -> FIRST).");
-    while (d.last != null) {
-      StdOut.println(d.last.item);
-      d.last = d.last.previous;
+    StdOut.println("Adding random items to the deque...");
+    for (int i = 0; i < 10; i++) {
+      int r0 = StdRandom.uniform(0, 10);
+      int r1 = StdRandom.uniform(0, 10);
+      String item = "item-" + r0 + "-" + r1;
+      if (r0 <= 4) {
+        StdOut.println("Adding " + item + " in the front.");
+        d.addFirst(item);
+      } else {
+        StdOut.println("Adding " + item + " in the back.");
+        d.addLast(item);
+      }
     }
+
+    StdOut.println("Items in the deque via iterator.");
+    for (String item : d)
+    { StdOut.println(item); }
   }
 }
