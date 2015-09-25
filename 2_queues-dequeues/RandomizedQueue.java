@@ -1,5 +1,6 @@
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdOut;
+import java.util.Iterator;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
   Item[] queue;
@@ -63,6 +64,20 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
   // return an independent iterator over items in random order
   public Iterator<Item> iterator()
+  { return new RQIterator(); }
+
+  private class RQIterator implements Iterator<Item> {
+
+
+    public RQIterator()
+
+    public Item next()
+
+    public boolean hasNext()
+
+    public void remove()
+    { throw new IllegalArgumentException(); }
+  }
 
   // unit testing
   public static void main(String[] args)
