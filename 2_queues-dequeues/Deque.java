@@ -125,15 +125,18 @@ public class Deque<Item> implements Iterable<Item> {
       }
     }
 
+    StdOut.println("========================================");
     StdOut.println("Items in the deque via iterator.");
     for (String item : d)
     { StdOut.println(item); }
 
+    StdOut.println("========================================");
+    StdOut.println("Current number of items in the deque: " + d.size());
     StdOut.println("Removing the items from deque in reverse order.");
     while (!d.isEmpty()) {
       String item = d.removeLast();
       StdOut.println("Removing " + item);
-      Std // TODO
+      StdOut.println("The deque's size after removing an item: " + d.size());
     }
   }
 }
