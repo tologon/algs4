@@ -36,6 +36,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     int randomIndex = StdRandom.uniform(0, numOfItems);
     Item randomItem = queue[randomIndex];
     queue[randomIndex] = queue[numOfItems - 1];
+    numOfItems--;
     return randomItem;
   }
 
@@ -49,16 +50,16 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
   }
 
   private void checkSize() {
-    if (numOfItems == rq.length)
+    if (numOfItems == queue.length)
     { adjustSize(numOfItems * 2); }
-    else if (numOfItems == rq.length / 4)
+    else if (numOfItems == queue.length / 4)
     { adjustSize(numOfItems); }
   }
 
   private void adjustSize(int newSize) {
     Item[] tmp = new Item[newSize];
     for (int i = 0; i < newSize; i++)
-    { tmp[i] = rq[i]; }
+    { tmp[i] = queue[i]; }
     rq = tmp;
   }
 
@@ -67,13 +68,21 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
   { return new RQIterator(); }
 
   private class RQIterator implements Iterator<Item> {
+    Item[] iterator;
 
+    public RQIterator() {
+      for (int i = 0; i < numOfItems; i++)
+      { iterator[i] = queue[i]; }
+    }
 
-    public RQIterator()
+    public Item next() {
+      if (!hasNext()) throw new java.util.NoSuchElementException();
 
-    public Item next()
+      return iterator.dequeue();
+    }
 
     public boolean hasNext()
+    { return iterator.isEmpty(); }
 
     public void remove()
     { throw new IllegalArgumentException(); }
