@@ -8,7 +8,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
   // construct an empty randomized queue
   public RandomizedQueue() {
-    queue = new Item[1];
+    queue = (Item[]) new Object[1];
     numOfItems = 0;
   }
 
@@ -30,7 +30,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
   // remove and return a random item
   public Item dequeue() {
-    if (item == null || isEmpty()) throw new NullPointerException();
+    if (isEmpty()) throw new NullPointerException();
     checkSize();
 
     int randomIndex = StdRandom.uniform(0, numOfItems);
@@ -42,7 +42,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
   // return (but do not remove) a random item
   public Item sample() {
-    if (item == null || isEmpty()) throw new NullPointerException();
+    if (isEmpty()) throw new NullPointerException();
 
     int randomIndex = StdRandom.uniform(0, numOfItems);
     Item randomItem = queue[randomIndex];
@@ -57,10 +57,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
   }
 
   private void adjustSize(int newSize) {
-    Item[] tmp = new Item[newSize];
+    Item[] tmp = (Item[]) new Object[newSize];
     for (int i = 0; i < newSize; i++)
     { tmp[i] = queue[i]; }
-    rq = tmp;
+    queue = tmp;
   }
 
   // return an independent iterator over items in random order
@@ -89,5 +89,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
   }
 
   // unit testing
-  public static void main(String[] args)
+  public static void main(String[] args) {
+
+  }
 }
