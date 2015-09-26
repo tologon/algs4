@@ -69,20 +69,28 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
   private class RQIterator implements Iterator<Item> {
     Item[] iterator;
+    int index;
+    int size;
 
     public RQIterator() {
-      for (int i = 0; i < numOfItems; i++)
+      size = numOfItems;
+      iterator = (Item[]) new Object[size];
+      for (int i = 0; i < size; i++)
       { iterator[i] = queue[i]; }
+      StdRandom.shuffle(iterator);
+      index = 0;
     }
 
     public Item next() {
       if (!hasNext()) throw new java.util.NoSuchElementException();
 
-      return iterator.dequeue();
+      Item item = iterator[index];
+      iterator[index] = null;
+      return item;
     }
 
     public boolean hasNext()
-    { return iterator.isEmpty(); }
+    { return index + 1 < size; }
 
     public void remove()
     { throw new IllegalArgumentException(); }
