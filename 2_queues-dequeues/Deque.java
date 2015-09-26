@@ -8,9 +8,9 @@ public class Deque<Item> implements Iterable<Item> {
   private int numOfItems;
 
   private class Node {
-    Item item;
-    Node next;
-    Node previous;
+    private Item item;
+    private Node next;
+    private Node previous;
   }
 
   // construct an empty deque
@@ -87,7 +87,7 @@ public class Deque<Item> implements Iterable<Item> {
   { return new DequeIterator(); }
 
   private class DequeIterator implements Iterator<Item> {
-    Node current;
+    private Node current;
 
     public DequeIterator()
     { current = first; }

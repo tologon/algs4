@@ -69,9 +69,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
   { return new RQIterator(); }
 
   private class RQIterator implements Iterator<Item> {
-    Item[] iterator;
-    int index;
-    int size;
+    private Item[] iterator;
+    private int index;
+    private int size;
 
     public RQIterator() {
       size = numOfItems;
