@@ -23,18 +23,19 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
   // add the item
   public void enqueue(Item item) {
     if (item == null) throw new NullPointerException();
-    checkSize();
+    upSize();
     queue[numOfItems++] = item;
   }
 
   // remove and return a random item
   public Item dequeue() {
     if (isEmpty()) throw new java.util.NoSuchElementException();
-    checkSize();
+    downSize();
 
     int randomIndex = StdRandom.uniform(0, numOfItems);
     Item randomItem = queue[randomIndex];
     queue[randomIndex] = queue[numOfItems - 1];
+    queue[numOfItems - 1] = null;
     numOfItems--;
     return randomItem;
   }
@@ -48,13 +49,14 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     return randomItem;
   }
 
-  private void checkSize() {
+  private void upSize() {
     if (numOfItems == queue.length)
-    { adjustSize(numOfItems * 2); }
-    else if (numOfItems == 0)
-    { /* this accounts for empty queue*/ }
-    else if (numOfItems == queue.length / 4)
-    { adjustSize(numOfItems); }
+    { adjustSize(queue.length * 2); }
+  }
+
+  private void downSize() {
+    if (numOfItems > 0 && numOfItems == queue.length / 4)
+    { adjustSize(queue.length / 2); }
   }
 
   private void adjustSize(int newSize) {
@@ -100,13 +102,44 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
   public static void main(String[] args) {
     RandomizedQueue<String> rq = new RandomizedQueue<>();
 
-    String[] items = {"diaper", "violin", "car", "apple", "piano"};
-    for (String item : items) {
-      StdOut.println("Adding " + item + " to the queue.");
-      rq.enqueue(item);
+    StdOut.println("Adding/Removing random items to the queue...");
+    for (int i = 0; i < 100; i++) {
+      int r0 = StdRandom.uniform(0, 10);
+      int r1 = StdRandom.uniform(0, 10);
+      String item = "item-" + r0 + "-" + r1;
+      if (r0 <= 4) {
+        StdOut.println("Adding " + item);
+        rq.enqueue(item);
+      }
+      else if (r0 > 5 && !rq.isEmpty()) {
+        StdOut.println("Removing a random item");
+        rq.dequeue();
+      }
+      else {
+        StdOut.println("The RQ is empty.");
+      }
+      StdOut.println("========================================");
     }
-
     StdOut.println("Current size of the queue: " + rq.size());
+    // int r0, r1;
+    // StdOut.println("Testing adding 2 adds + 1 remove + 1 add");
+    // // item #1
+    // r0 = StdRandom.uniform(0, 10);
+    // r1 = StdRandom.uniform(0, 10);
+    // String item1 = "item-" + r0 + "-" + r1;
+    // // item #2
+    // r0 = StdRandom.uniform(0, 10);
+    // r1 = StdRandom.uniform(0, 10);
+    // String item2 = "item-" + r0 + "-" + r1;
+    // // item #3
+    // r0 = StdRandom.uniform(0, 10);
+    // r1 = StdRandom.uniform(0, 10);
+    // String item3 = "item-" + r0 + "-" + r1;
+    // rq.enqueue(item1);
+    // rq.enqueue(item2);
+    // rq.dequeue();
+    // rq.enqueue(item3);
+
     // StdOut.println("Sample item: " + rq.sample());
     // StdOut.println("Another sample item: " + rq.sample());
     // StdOut.println("=====================================");
@@ -114,18 +147,5 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     //   StdOut.println("Removing " + rq.dequeue() + " from the queue.");
     // }
     // StdOut.println("Current size of the queue: " + rq.size());
-
-    StdOut.println("========================================");
-    // StdOut.println("Items in the queue via iterator.");
-    // for (String item : rq)
-    // { StdOut.println(item); }
-    Iterator<String> it1 = rq.iterator();
-    Iterator<String> it2 = rq.iterator();
-    int count = 0;
-    StdOut.println("Item #\t|\t1st Iterator\t|\t2nd Iterator");
-    while (it1.hasNext() && it2.hasNext()) {
-      StdOut.println("   " + count + "\t|\t" + it1.next() + "\t\t|\t" + it2.next());
-      count++;
-    }
   }
 }

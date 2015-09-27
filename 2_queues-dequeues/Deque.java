@@ -104,7 +104,7 @@ public class Deque<Item> implements Iterable<Item> {
     { return current != null; }
 
     public void remove()
-    { throw new IllegalArgumentException(); }
+    { throw new UnsupportedOperationException(); }
   }
 
   // unit testing
