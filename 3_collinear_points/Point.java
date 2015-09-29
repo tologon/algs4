@@ -59,7 +59,23 @@ public class Point implements Comparable<Point> {
      * @return the slope between this point and the specified point
      */
     public double slopeTo(Point that) {
-        /* YOUR CODE HERE */
+      // the line segment is degenerate, i.e. the points are equal
+      if (compareTo(that) == 0)
+      { return Double.NEGATIVE_INFINITY; }
+      // the line segment is horizontal
+      else if (that.y - this.y == +0
+            || that.y - this.y == -0)
+      { return +0.0; }
+      // the line segment is vertical
+      else if (that.x - this.x == +0
+            || that.x - this.x == -0)
+      { return Double.POSITIVE_INFINITY; }
+      // the line segment is "normal", i.e. it can be calculated
+      else {
+        double dY = (double) that.y - (double) this.y;
+        double dX = (double) that.x - (double) this.x;
+        return dY / dX;
+      }
     }
 
     /**
@@ -75,12 +91,15 @@ public class Point implements Comparable<Point> {
      *         argument point
      */
     public int compareTo(Point that) {
-        if (this.x == that.x && this.y == that.y)
-        { return 0; }
-        if (this.y < that.y || (this.y == that.y && this.x < that.x))
-        { return -1; }
-        else
-        { return 1; }
+      // points are equal
+      if (this.x == that.x && this.y == that.y)
+      { return 0; }
+      // the invoking point is less than the argument point
+      else if (this.y < that.y || (this.y == that.y && this.x < that.x))
+      { return -1; }
+      // the invoking point is greater than the argument point
+      else
+      { return 1; }
     }
 
     /**
