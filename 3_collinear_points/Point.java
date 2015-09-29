@@ -64,12 +64,10 @@ public class Point implements Comparable<Point> {
       if (compareTo(that) == 0)
       { return Double.NEGATIVE_INFINITY; }
       // the line segment is horizontal
-      else if (that.y - this.y == +0
-            || that.y - this.y == -0)
+      else if (that.y - this.y == 0)
       { return +0.0; }
       // the line segment is vertical
-      else if (that.x - this.x == +0
-            || that.x - this.x == -0)
+      else if (that.x - this.x == 0)
       { return Double.POSITIVE_INFINITY; }
       // the line segment is "normal", i.e. it can be calculated
       else {
@@ -132,6 +130,7 @@ public class Point implements Comparable<Point> {
     public static void main(String[] args) {
         Point p1 = new Point(1, 1);
         Point p2 = new Point(0, 0);
+        Point p3 = new Point(5, 1);
         StdOut.println("Slope from " + p1.toString()
                      + " to " + p2.toString() + ": " + p1.slopeTo(p2));
         StdOut.println("Slope from " + p2.toString()
@@ -144,5 +143,9 @@ public class Point implements Comparable<Point> {
                     +  " than " + p1.toString());
         StdOut.println(p1.toString() + " is " + p1.compareTo(p1)
                     +  " than " + p1.toString());
+        StdOut.println("Slope from " + p1.toString()
+                     + " to " + p3.toString() + ": " + p1.slopeTo(p3));
+        StdOut.println(p1.toString() + " is " + p1.compareTo(p3)
+                    +  " than " + p3.toString());
     }
 }
