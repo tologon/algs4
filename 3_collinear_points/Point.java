@@ -10,6 +10,7 @@
 
 import java.util.Comparator;
 import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
 
 public class Point implements Comparable<Point> {
 
@@ -108,9 +109,9 @@ public class Point implements Comparable<Point> {
      *
      * @return the Comparator that defines this ordering on points
      */
-    public Comparator<Point> slopeOrder() {
-        /* YOUR CODE HERE */
-    }
+    // public Comparator<Point> slopeOrder() {
+    //     /* YOUR CODE HERE */
+    // }
 
 
     /**
@@ -129,6 +130,19 @@ public class Point implements Comparable<Point> {
      * Unit tests the Point data type.
      */
     public static void main(String[] args) {
-        /* YOUR CODE HERE */
+        Point p1 = new Point(1, 1);
+        Point p2 = new Point(0, 0);
+        StdOut.println("Slope from " + p1.toString()
+                     + " to " + p2.toString() + ": " + p1.slopeTo(p2));
+        StdOut.println("Slope from " + p2.toString()
+                     + " to " + p1.toString() + ": " + p2.slopeTo(p1));
+        StdOut.println("Slope from " + p1.toString()
+                     + " to " + p1.toString() + ": " + p1.slopeTo(p1));
+        StdOut.println(p1.toString() + " is " + p1.compareTo(p2)
+                    +  " than " + p2.toString());
+        StdOut.println(p2.toString() + " is " + p2.compareTo(p1)
+                    +  " than " + p1.toString());
+        StdOut.println(p1.toString() + " is " + p1.compareTo(p1)
+                    +  " than " + p1.toString());
     }
 }
