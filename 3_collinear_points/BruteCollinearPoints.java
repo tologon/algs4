@@ -4,14 +4,6 @@ public class BruteCollinearPoints {
 
   // finds all line segments containing 4 points
   public BruteCollinearPoints(Point[] points) {
-    /*
-     * for sorting, use java.util.Arrays.sort
-     * 1. for every combination of 4 points
-     * 1.1 check every pair of points on whether they are collinear or not
-     * 2. for every 4 collinear points, find end points (i.e. sort them)
-     * 3. make a line segment and add it to the array of segments
-     */
-
      segments = new LineSegment[1];
      count = 0;
      for (int i = 0; i < points.length; i++) {
@@ -24,18 +16,19 @@ public class BruteCollinearPoints {
            double slope1to3 = p1.slopeTo(p3);
            double slope2to3 = p2.slopeTo(p3);
            // 3 points are not degenerate & their slopes match
-           if (slope1to2 != Double.NEGATIVE_INFINITY
-           && slope1to3 != Double.NEGATIVE_INFINITY
-           && slope2to3 != Double.NEGATIVE_INFINITY
-           && (slope1to2 == slope2to3
-           || slope1to2 == slope1to3
-           || slope1to3 == slope2to3)) {
+           if (threeMatch(slope1to2, slope1to3, slope2to3)) {
              for (int m = k + 1; m < points.length; m++) {
                Point p4 = points[m];
-               double slope4to1 = p4.slopeTo(p1);
-               double slope4to2 = p4.slopeTo(p2);
-               double slope4to3 = p4.slopeTo(p3);
-               if ()
+               double lastSlope = p4.slopeTo(p1);
+               if (fourMatch(slope1to2, lastSlope)) {
+                 checkSize();
+                 Point[] fourPoints = {p1, p2, p3, p4};
+                 java.util.Arrays.sort(fourPoints);
+                 Point first = fourPoints[0];
+                 Point last = fourPoints[3];
+                 LineSegment segment = new LineSegment(first, last);
+                 segments[count++] = segment;
+               }
              }
            }
          }
@@ -43,14 +36,23 @@ public class BruteCollinearPoints {
      }
   }
 
-  private boolean isMatch(double slope1, double slope2, double slope3) {
+  private boolean threeMatch(double slope1, double slope2, double slope3) {
     return (slope1 != Double.NEGATIVE_INFINITY
          && slope2 != Double.NEGATIVE_INFINITY
          && slope3 != Double.NEGATIVE_INFINITY
          && (slope1 == slope2 || slope1 == slope3 || slope2 == slope3));
   }
 
-  private void resizeArray() {
+  private boolean fourMatch(double matchingSlope, double lastSlope)
+  { return matchingSlope == lastSlope; }
+
+  private void checkSize() {
+    if (count == segments.length) {
+      LineSegment[] tmp = new LineSegment[segments.length * 2];
+      for (int i = 0; i < count; i++)
+      { tmp[i] = segments[i]; }
+      segments = tmp;
+    }
   }
 
   // the number of line segments
