@@ -5,6 +5,23 @@ public class FastCollinearPoints {
   // finds all line segments containing 4 or more points
   public FastCollinearPoints(Point[] points) {
     checkPoints(points);
+    segments = new LineSegment[1];
+    count = 0;
+
+    for (int i = 0; i < points.length; i++) {
+      // sort remaining array of points
+      // according to slopes they make with the current point
+      Point currentPoint = points[i];
+      java.util.Arrays.sort(points, i + 1, points.length,
+                            currentPoint.slopeOrder());
+      // iterate over the rest of points & find line segments
+      int nextPoint = i + 1;
+      if (nextPoint < points.length) {
+        double currentSlope = currentPoint.slopeTo(points[nextPoint]);
+        while (nextPoint < points.length)
+        { findLineSegments(nextPoint, currentSlope); }
+      }
+    }
   }
 
   private void checkPoints(Point[] points) {
