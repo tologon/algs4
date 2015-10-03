@@ -113,7 +113,11 @@ public class Point implements Comparable<Point> {
 
     private class SlopeOrder implements Comparator<Point> {
       public int compare(Point q1, Point q2) {
-        // TODO implement comparison method of points' slopes
+        double slope1 = slopeTo(q1);
+        double slope2 = slopeTo(q2);
+        if (slope1 > slope2) return 1;
+        else if (slope1 < slope2) return -1;
+        else                      return 0;
       }
     }
 
