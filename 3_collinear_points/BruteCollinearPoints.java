@@ -1,6 +1,6 @@
-import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.In;
+// import edu.princeton.cs.algs4.StdOut;
+// import edu.princeton.cs.algs4.StdDraw;
+// import edu.princeton.cs.algs4.In;
 
 public class BruteCollinearPoints {
   private LineSegment[] segments;
@@ -33,10 +33,6 @@ public class BruteCollinearPoints {
                 Point last = fourPoints[3];
                 LineSegment segment = new LineSegment(first, last);
                 segments[count++] = segment;
-                // jump to next point (since previous are collinear)
-                m = points.length;
-                k = points.length;
-                n = points.length;
               }
             }
           }
