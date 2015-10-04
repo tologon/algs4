@@ -138,24 +138,24 @@ public class Point implements Comparable<Point> {
      * Unit tests the Point data type.
      */
     public static void main(String[] args) {
-        Point p1 = new Point(1, 1);
-        Point p2 = new Point(0, 0);
-        Point p3 = new Point(5, 1);
-        StdOut.println("Slope from " + p1.toString()
-                     + " to " + p2.toString() + ": " + p1.slopeTo(p2));
-        StdOut.println("Slope from " + p2.toString()
-                     + " to " + p1.toString() + ": " + p2.slopeTo(p1));
-        StdOut.println("Slope from " + p1.toString()
-                     + " to " + p1.toString() + ": " + p1.slopeTo(p1));
-        StdOut.println(p1.toString() + " is " + p1.compareTo(p2)
-                    +  " than " + p2.toString());
-        StdOut.println(p2.toString() + " is " + p2.compareTo(p1)
-                    +  " than " + p1.toString());
-        StdOut.println(p1.toString() + " is " + p1.compareTo(p1)
-                    +  " than " + p1.toString());
-        StdOut.println("Slope from " + p1.toString()
-                     + " to " + p3.toString() + ": " + p1.slopeTo(p3));
-        StdOut.println(p1.toString() + " is " + p1.compareTo(p3)
-                    +  " than " + p3.toString());
+        // Point p1 = new Point(1, 1);
+        // Point p2 = new Point(0, 0);
+        // Point p3 = new Point(5, 1);
+        // StdOut.println("Slope from " + p1.toString()
+        //              + " to " + p2.toString() + ": " + p1.slopeTo(p2));
+        // StdOut.println("Slope from " + p2.toString()
+        //              + " to " + p1.toString() + ": " + p2.slopeTo(p1));
+        // StdOut.println("Slope from " + p1.toString()
+        //              + " to " + p1.toString() + ": " + p1.slopeTo(p1));
+        // StdOut.println(p1.toString() + " is " + p1.compareTo(p2)
+        //             +  " than " + p2.toString());
+        // StdOut.println(p2.toString() + " is " + p2.compareTo(p1)
+        //             +  " than " + p1.toString());
+        // StdOut.println(p1.toString() + " is " + p1.compareTo(p1)
+        //             +  " than " + p1.toString());
+        // StdOut.println("Slope from " + p1.toString()
+        //              + " to " + p3.toString() + ": " + p1.slopeTo(p3));
+        // StdOut.println(p1.toString() + " is " + p1.compareTo(p3)
+        //             +  " than " + p3.toString());
     }
 }
