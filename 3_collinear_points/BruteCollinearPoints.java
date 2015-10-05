@@ -88,8 +88,10 @@ public class BruteCollinearPoints {
   { return count; }
 
   // the line segments
-  public LineSegment[] segments()
-  { return segments; }
+  public LineSegment[] segments() {
+    LineSegment[] segmentsCopy = segments;
+    return segmentsCopy;
+  }
 
   // unit testing
   // public static void main(String[] args) {
