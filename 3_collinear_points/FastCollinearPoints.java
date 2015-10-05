@@ -19,27 +19,20 @@ public class FastCollinearPoints {
       java.util.Arrays.sort(points, i + 1, points.length,
                             currentPoint.slopeOrder());
 
-      double currentSlope;
-      // continue as long as there are points after current point
-      if (i + 1 <  points.length)
-      { currentSlope = currentPoint.slopeTo(points[i + 1]); }
-      // break when no points exist after current point
-      else
-      { break; }
-      int numOfPoints = 1;
-
       // iterate over the rest of points & find line segments
-      findLineSegments(points, currentPoint, i, currentSlope, numOfPoints);
+      findLineSegments(points, i);
     }
     downSize();
   }
 
-  private void findLineSegments(Point[] points, Point currentPoint, int index,
-                                double slope, int numOfPoints) {
+  private void findLineSegments(Point[] points, int index) {
+    Point currentPoint = points[index];
+    double currentSlope = currentPoint.slopeTo(points[index + 1]);
+    int numOfPoints = 1;
     for (int k = index + 1; k < points.length; k++) {
       double newSlope = currentPoint.slopeTo(points[k]);
       // continue until a truly "new" slope is found
-      if (slope == newSlope)
+      if (currentSlope == newSlope)
       { numOfPoints++; }
       else {
         // if 4 or more points, they are collinear
@@ -53,7 +46,7 @@ public class FastCollinearPoints {
           LineSegment s = new LineSegment(first, last);
           segments[count++] = s;
         }
-        slope = newSlope;
+        currentSlope = newSlope;
         numOfPoints = 1;
       }
     }
