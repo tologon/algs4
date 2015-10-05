@@ -27,6 +27,7 @@ public class FastCollinearPoints {
       // iterate over the rest of points & find line segments
       findLineSegments(i);
     }
+    StdOut.println("=================================");
     downSize();
   }
 
@@ -50,8 +51,8 @@ public class FastCollinearPoints {
 
   private void testSort(Point[] points) {
     StdOut.println("TESTING SORT USING SPECIFIC SLOPE ORDER.");
-    for (int i = 0; i < pointsCopy.length; i++) {
-      StdOut.println(pointsCopy[i].toString());
+    for (int i = 0; i < points.length; i++) {
+      StdOut.println(points[i].toString());
     }
   }
 
@@ -64,7 +65,8 @@ public class FastCollinearPoints {
       StdOut.print("NEW SLOPE(S):");
       int numOfPoints = 2;
       for (int k = index + 1; k < pointsCopy.length; k++) {
-        double newSlope = currentPoint.slopeTo(pointsCopy[k]);
+        Point newPoint = pointsCopy[k - 1];
+        double newSlope = newPoint.slopeTo(pointsCopy[k]);
         StdOut.print(" " + newSlope + ", ");
         // continue until a truly "new" slope is found
         if (currentSlope == newSlope)
