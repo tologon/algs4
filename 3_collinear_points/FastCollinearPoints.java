@@ -12,17 +12,26 @@ public class FastCollinearPoints {
     segments = new LineSegment[10];
     count = 0;
 
+    testSort(points);
+
     for (int i = 0; i < points.length; i++) {
       // sort remaining array of points
       // according to slopes they make with the current point
       Point currentPoint = points[i];
       java.util.Arrays.sort(points, i + 1, points.length,
                             currentPoint.slopeOrder());
-
+      testSort(points);
       // iterate over the rest of points & find line segments
       findLineSegments(points, i);
     }
     downSize();
+  }
+
+  private void testSort(Point[] points) {
+    StdOut.println("TESTING SORT USING SPECIFIC SLOPE ORDER.");
+    for (int i = 0; i < points.length; i++) {
+      StdOut.println(points[i].toString());
+    }
   }
 
   private void findLineSegments(Point[] points, int index) {
@@ -32,10 +41,10 @@ public class FastCollinearPoints {
       double currentSlope = currentPoint.slopeTo(points[index + 1]);
       StdOut.println("CURRENT SLOPE: " + currentSlope);
       StdOut.print("NEW SLOPE(S):");
-      int numOfPoints = 1;
+      int numOfPoints = 2;
       for (int k = index + 1; k < points.length; k++) {
         double newSlope = currentPoint.slopeTo(points[k]);
-        StdOut.print(" " + newSlope + ";");
+        StdOut.print(" " + newSlope + ", ");
         // continue until a truly "new" slope is found
         if (currentSlope == newSlope)
         { numOfPoints++; }
@@ -50,11 +59,14 @@ public class FastCollinearPoints {
             Point last = collinearPoints[collinearPoints.length - 1];
             LineSegment s = new LineSegment(first, last);
             segments[count++] = s;
+            StdOut.print(" NEW LINE SEGMENT ADDED: " + s.toString() + ", ");
           }
           currentSlope = newSlope;
-          numOfPoints = 1;
+          numOfPoints = 2;
         }
+        StdOut.print("POINTS #: " + numOfPoints + "; ");
       }
+      StdOut.println();
     }
   }
 
