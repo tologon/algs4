@@ -4,46 +4,49 @@ import edu.princeton.cs.algs4.In;
 
 public class FastCollinearPoints {
   private LineSegment[] segments;
+  private Point[] pointsCopy;
   private int count;
 
   // finds all line segments containing 4 or more points
   public FastCollinearPoints(Point[] points) {
-    checkPoints(points);
+    pointsCopy = java.util.Arrays.copyOf(points);
+
+    checkPoints(pointsCopy);
     segments = new LineSegment[10];
     count = 0;
 
-    testSort(points);
+    testSort(pointsCopy);
 
-    for (int i = 0; i < points.length; i++) {
+    for (int i = 0; i < pointsCopy.length; i++) {
       // sort remaining array of points
       // according to slopes they make with the current point
-      Point currentPoint = points[i];
-      java.util.Arrays.sort(points, i + 1, points.length,
+      Point currentPoint = pointsCopy[i];
+      java.util.Arrays.sort(pointsCopy, i + 1, pointsCopy.length,
                             currentPoint.slopeOrder());
-      testSort(points);
+      testSort(pointsCopy);
       // iterate over the rest of points & find line segments
-      findLineSegments(points, i);
+      findLineSegments(i);
     }
     downSize();
   }
 
-  private void testSort(Point[] points) {
+  private void testSort() {
     StdOut.println("TESTING SORT USING SPECIFIC SLOPE ORDER.");
-    for (int i = 0; i < points.length; i++) {
-      StdOut.println(points[i].toString());
+    for (int i = 0; i < pointsCopy.length; i++) {
+      StdOut.println(pointsCopy[i].toString());
     }
   }
 
-  private void findLineSegments(Point[] points, int index) {
-    Point currentPoint = points[index];
-    if (index + 1 < points.length) {
+  private void findLineSegments(int index) {
+    Point currentPoint = pointsCopy[index];
+    if (index + 1 < pointsCopy.length) {
       StdOut.print("IN FINDLINESEGMENTS; ");
-      double currentSlope = currentPoint.slopeTo(points[index + 1]);
+      double currentSlope = currentPoint.slopeTo(pointsCopy[index + 1]);
       StdOut.println("CURRENT SLOPE: " + currentSlope);
       StdOut.print("NEW SLOPE(S):");
       int numOfPoints = 2;
-      for (int k = index + 1; k < points.length; k++) {
-        double newSlope = currentPoint.slopeTo(points[k]);
+      for (int k = index + 1; k < pointsCopy.length; k++) {
+        double newSlope = currentPoint.slopeTo(pointsCopy[k]);
         StdOut.print(" " + newSlope + ", ");
         // continue until a truly "new" slope is found
         if (currentSlope == newSlope)
@@ -51,15 +54,7 @@ public class FastCollinearPoints {
         else {
           // if 4 or more points, they are collinear
           if (numOfPoints >= 4) {
-            upSize();
-            Point[] collinearPoints;
-            collinearPoints = java.util.Arrays.copyOfRange(points, index, k + 1);
-            java.util.Arrays.sort(collinearPoints);
-            Point first = collinearPoints[0];
-            Point last = collinearPoints[collinearPoints.length - 1];
-            LineSegment s = new LineSegment(first, last);
-            segments[count++] = s;
-            StdOut.print(" NEW LINE SEGMENT ADDED: " + s.toString() + ", ");
+            createSegment(index, k + 1);
           }
           currentSlope = newSlope;
           numOfPoints = 2;
@@ -68,6 +63,18 @@ public class FastCollinearPoints {
       }
       StdOut.println();
     }
+  }
+
+  private void createSegment(int start, int end) {
+    upSize();
+    Point[] collinearPoints;
+    collinearPoints = java.util.Arrays.copyOfRange(pointsCopy, start, end);
+    java.util.Arrays.sort(collinearPoints);
+    Point first = collinearPoints[0];
+    Point last = collinearPoints[collinearPoints.length - 1];
+    LineSegment s = new LineSegment(first, last);
+    segments[count++] = s;
+    StdOut.print(" NEW LINE SEGMENT ADDED: " + s.toString() + ", ");
   }
 
   private void checkPoints(Point[] points) {
@@ -107,7 +114,7 @@ public class FastCollinearPoints {
 
   // the line segments
   public LineSegment[] segments() {
-    LineSegment[] segmentsCopy = segments;
+    LineSegment[] segmentsCopy = java.util.Arrays.copyOf(segments);
     return segmentsCopy;
   }
 

@@ -89,7 +89,7 @@ public class BruteCollinearPoints {
 
   // the line segments
   public LineSegment[] segments() {
-    LineSegment[] segmentsCopy = segments;
+    LineSegment[] segmentsCopy = java.util.Arrays.copyOf(segments);
     return segmentsCopy;
   }
 
