@@ -1,6 +1,6 @@
-// import edu.princeton.cs.algs4.StdOut;
-// import edu.princeton.cs.algs4.StdDraw;
-// import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.In;
 
 public class FastCollinearPoints {
   private LineSegment[] segments;
@@ -27,27 +27,33 @@ public class FastCollinearPoints {
 
   private void findLineSegments(Point[] points, int index) {
     Point currentPoint = points[index];
-    double currentSlope = currentPoint.slopeTo(points[index + 1]);
-    int numOfPoints = 1;
-    for (int k = index + 1; k < points.length; k++) {
-      double newSlope = currentPoint.slopeTo(points[k]);
-      // continue until a truly "new" slope is found
-      if (currentSlope == newSlope)
-      { numOfPoints++; }
-      else {
-        // if 4 or more points, they are collinear
-        if (numOfPoints >= 4) {
-          upSize();
-          Point[] collinearPoints;
-          collinearPoints = java.util.Arrays.copyOfRange(points, index, k + 1);
-          java.util.Arrays.sort(collinearPoints);
-          Point first = collinearPoints[0];
-          Point last = collinearPoints[collinearPoints.length - 1];
-          LineSegment s = new LineSegment(first, last);
-          segments[count++] = s;
+    if (index + 1 < points.length) {
+      StdOut.print("IN FINDLINESEGMENTS; ");
+      double currentSlope = currentPoint.slopeTo(points[index + 1]);
+      StdOut.println("CURRENT SLOPE: " + currentSlope);
+      StdOut.print("NEW SLOPE(S):");
+      int numOfPoints = 1;
+      for (int k = index + 1; k < points.length; k++) {
+        double newSlope = currentPoint.slopeTo(points[k]);
+        StdOut.print(" " + newSlope + ";");
+        // continue until a truly "new" slope is found
+        if (currentSlope == newSlope)
+        { numOfPoints++; }
+        else {
+          // if 4 or more points, they are collinear
+          if (numOfPoints >= 4) {
+            upSize();
+            Point[] collinearPoints;
+            collinearPoints = java.util.Arrays.copyOfRange(points, index, k + 1);
+            java.util.Arrays.sort(collinearPoints);
+            Point first = collinearPoints[0];
+            Point last = collinearPoints[collinearPoints.length - 1];
+            LineSegment s = new LineSegment(first, last);
+            segments[count++] = s;
+          }
+          currentSlope = newSlope;
+          numOfPoints = 1;
         }
-        currentSlope = newSlope;
-        numOfPoints = 1;
       }
     }
   }
@@ -92,34 +98,34 @@ public class FastCollinearPoints {
     LineSegment[] segmentsCopy = segments;
     return segmentsCopy;
   }
-  
+
   // unit testing
-  // public static void main(String[] args) {
-  //
-  //     // read the N points from a file
-  //     In in = new In(args[0]);
-  //     int N = in.readInt();
-  //     Point[] points = new Point[N];
-  //     for (int i = 0; i < N; i++) {
-  //         int x = in.readInt();
-  //         int y = in.readInt();
-  //         points[i] = new Point(x, y);
-  //     }
-  //
-  //     // draw the points
-  //     StdDraw.show(0);
-  //     StdDraw.setXscale(0, 32768);
-  //     StdDraw.setYscale(0, 32768);
-  //     for (Point p : points) {
-  //         p.draw();
-  //     }
-  //     StdDraw.show();
-  //
-  //     // print and draw the line segments
-  //     BruteCollinearPoints collinear = new BruteCollinearPoints(points);
-  //     for (LineSegment segment : collinear.segments()) {
-  //         StdOut.println(segment);
-  //         segment.draw();
-  //     }
-  // }
+  public static void main(String[] args) {
+
+      // read the N points from a file
+      In in = new In(args[0]);
+      int N = in.readInt();
+      Point[] points = new Point[N];
+      for (int i = 0; i < N; i++) {
+          int x = in.readInt();
+          int y = in.readInt();
+          points[i] = new Point(x, y);
+      }
+
+      // draw the points
+      StdDraw.show(0);
+      StdDraw.setXscale(0, 32768);
+      StdDraw.setYscale(0, 32768);
+      for (Point p : points) {
+          p.draw();
+      }
+      StdDraw.show();
+
+      // print and draw the line segments
+      FastCollinearPoints collinear = new FastCollinearPoints(points);
+      for (LineSegment segment : collinear.segments()) {
+          StdOut.println(segment);
+          segment.draw();
+      }
+  }
 }
