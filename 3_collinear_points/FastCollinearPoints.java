@@ -9,7 +9,7 @@ public class FastCollinearPoints {
 
   // finds all line segments containing 4 or more points
   public FastCollinearPoints(Point[] points) {
-    pointsCopy = java.util.Arrays.copyOf(points);
+    pointsCopy = copy(points);
 
     checkPoints(pointsCopy);
     segments = new LineSegment[10];
@@ -30,7 +30,25 @@ public class FastCollinearPoints {
     downSize();
   }
 
-  private void testSort() {
+  private Point[] copy(Point[] points) {
+    Point[] tmp = new Point[points.length];
+    for (int i = 0; i < tmp.length; i++) {
+      Point p = points[i];
+      tmp[i] = p;
+    }
+    return tmp;
+  }
+
+  private LineSegment[] copy(LineSegment[] lineSegments) {
+    LineSegment[] tmp = new LineSegment[lineSegments.length];
+    for (int i = 0; i < tmp.length; i++) {
+      LineSegment p = lineSegments[i];
+      tmp[i] = p;
+    }
+    return tmp;
+  }
+
+  private void testSort(Point[] points) {
     StdOut.println("TESTING SORT USING SPECIFIC SLOPE ORDER.");
     for (int i = 0; i < pointsCopy.length; i++) {
       StdOut.println(pointsCopy[i].toString());
@@ -114,7 +132,7 @@ public class FastCollinearPoints {
 
   // the line segments
   public LineSegment[] segments() {
-    LineSegment[] segmentsCopy = java.util.Arrays.copyOf(segments);
+    LineSegment[] segmentsCopy = copy(segments);
     return segmentsCopy;
   }
 
