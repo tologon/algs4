@@ -5,14 +5,13 @@ import java.util.Arrays;
 
 public class FastCollinearPoints {
   private LineSegment[] segments;
-  private Point[] origins;
   private int count;
 
   // finds all line segments containing 4 or more points
   public FastCollinearPoints(Point[] points) {
     // check for null entries & copy the array
     check(points);
-    origins = copy(points);
+    Point[] origins = copy(points);
 
     segments = new LineSegment[10];
     count = 0;
@@ -29,7 +28,7 @@ public class FastCollinearPoints {
       Arrays.sort(origins, i + 1, origins.length, point.slopeOrder());
 
       // 3. check if any (3 or more) adjacent points make a line
-      findLineSegments(i);
+      findLineSegments(origins, i);
     }
     downSize();
   }
@@ -73,7 +72,7 @@ public class FastCollinearPoints {
     }
   }
 
-  private void findLineSegments(int index) {
+  private void findLineSegments(Point[] origins, int index) {
     int originalIndex = index;
     StdOut.println("findLineSegments():");
     Point currentPoint = origins[index];
@@ -91,7 +90,7 @@ public class FastCollinearPoints {
         { numOfPoints++; }
         else {
           if (numOfPoints >= 3)
-          { makeSegment(index, k); }
+          { makeSegment(origins, index, k); }
           // index = i;
           currentSlope = otherSlope;
           numOfPoints = 2;
@@ -102,7 +101,7 @@ public class FastCollinearPoints {
     }
   }
 
-  private void makeSegment(int start, int end) {
+  private void makeSegment(Point[] origins, int start, int end) {
     upSize();
     Point[] collinearPoints;
     collinearPoints = Arrays.copyOfRange(origins, start, end);
