@@ -7,7 +7,6 @@ public class FastCollinearPoints {
   private LineSegment[] segments;
   private Point[] origins;
   private int count;
-  private Point[] endpoints;
 
   // finds all line segments containing 4 or more points
   public FastCollinearPoints(Point[] points) {

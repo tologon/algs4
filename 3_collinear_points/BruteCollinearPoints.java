@@ -88,9 +88,16 @@ public class BruteCollinearPoints {
   { return count; }
 
   // the line segments
-  public LineSegment[] segments() {
-    LineSegment[] segmentsCopy = java.util.Arrays.copyOf(segments);
-    return segmentsCopy;
+  public LineSegment[] segments()
+  { return copy(segments); }
+
+  private LineSegment[] copy(LineSegment[] lineSegments) {
+    LineSegment[] tmp = new LineSegment[lineSegments.length];
+    for (int i = 0; i < tmp.length; i++) {
+      LineSegment p = lineSegments[i];
+      tmp[i] = p;
+    }
+    return tmp;
   }
 
   // unit testing
