@@ -1,22 +1,32 @@
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.In;
+import java.util.Arrays;
 
 public class FastCollinearPoints {
   private LineSegment[] segments;
-  private Point[] points;
+  private Point[] origins;
   private int count;
 
   // finds all line segments containing 4 or more points
   public FastCollinearPoints(Point[] points) {
-    this.points = copy(points);
+    // check for null entries & copy the array
+    check(points);
+    origins = copy(points);
 
-    /**
-     * 1. think of every point p as the origin
-     * 2. sort all other points q according to the slopes they make with p
-     * 3. check if any (3 or more) adjacent points make a line
-     * 4. if so, add them as line segment
-     */
+    segments = new LineSegment[5];
+    count = 0;
+
+    for (int i = 0; i < origins.length; i++) {
+      // 1. think of every point p as the origin
+      Point point = origins[i];
+
+      // 2. sort all other points q according to the slopes with p
+      Arrays.sort(origins, i + 1, origins.length, point.slopeOrder());
+
+      // 3. check if any (3 or more) adjacent points make a line
+      findLineSegments(i);
+    }
   }
 
   // the number of line segments
@@ -43,6 +53,46 @@ public class FastCollinearPoints {
       tmp[i] = p;
     }
     return tmp;
+  }
+
+  private void check(Point[] points) {
+    if (points == null) throw new NullPointerException();
+    if (points[0] == null) throw new NullPointerException();
+    for (int i = 0; i < points.length; i++) {
+      Point p1 = points[i];
+      for (int k = i + 1; k < points.length; k++) {
+        if (points[k] == null) throw new NullPointerException();
+        Point p2 = points[k];
+        if (p1.compareTo(p2) == 0) throw new IllegalArgumentException();
+      }
+    }
+  }
+
+  private void findLineSegments(int index) {
+    Point currentPoint = origins[index];
+    if (index + 1 < origins.length) {
+      // check if any (4 or more) adjacent points make a line
+      double currentSlope = currentPoint.slopeTo(origins[index + 1]);
+      int numOfPoints = 2;
+      for (int i = index + 1; i < origins.length; i++) {
+        Point otherPoint = origins[i];
+        if (i + 1 < origins.length) {
+          double otherSlope = otherPoint.slopeTo(origins[i + 1]);
+          // continute until a truly "new" slope is found
+          if (currentSlope == otherSlope)
+          { numOfPoints++; }
+          else if (numOfPoints >= 4) {
+            // makeSegment()
+          } else {
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  private void makeSegment(int start, int end) {
+    
   }
 
   // unit testing
