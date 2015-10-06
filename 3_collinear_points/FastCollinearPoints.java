@@ -74,25 +74,31 @@ public class FastCollinearPoints {
   }
 
   private void findLineSegments(int index) {
+    int originalIndex = index;
+    StdOut.println("findLineSegments():");
     Point currentPoint = origins[index];
     if (index + 1 < origins.length) {
       // check if any (4 or more) adjacent points make a line
       double currentSlope = currentPoint.slopeTo(origins[index + 1]);
+      StdOut.print("currentSlope: " + currentSlope + ", ");
       int numOfPoints = 2;
-      for (int i = index + 1; i < origins.length; i++) {
-        Point otherPoint = origins[i];
-        if (i + 1 < origins.length) {
-          double otherSlope = otherPoint.slopeTo(origins[i + 1]);
-          // continute until a truly "new" slope is found
-          if (currentSlope == otherSlope)
-          { numOfPoints++; }
-          else if (numOfPoints >= 4)
-          { makeSegment(index, i + 1); }
-          else {
-            break;
-          }
+      for (int i = index + 1, k = index + 2; k < origins.length; i++, k++) {
+        Point q1 = origins[i];
+        Point q2 = origins[k];
+        double otherSlope = q1.slopeTo(q2);
+        StdOut.print("otherSlope: " + otherSlope + ", ");
+        if (currentSlope == otherSlope)
+        { numOfPoints++; }
+        else {
+          if (numOfPoints >= 3)
+          { makeSegment(index, k); }
+          // index = i;
+          currentSlope = otherSlope;
+          numOfPoints = 2;
         }
       }
+      StdOut.println("end of " + originalIndex + "th iteration.");
+      StdOut.println("=================================================");
     }
   }
 
