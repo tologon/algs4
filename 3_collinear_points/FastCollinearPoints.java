@@ -7,6 +7,7 @@ public class FastCollinearPoints {
   private LineSegment[] segments;
   private Point[] origins;
   private int count;
+  private Point[] endpoints;
 
   // finds all line segments containing 4 or more points
   public FastCollinearPoints(Point[] points) {
@@ -14,11 +15,15 @@ public class FastCollinearPoints {
     check(points);
     origins = copy(points);
 
-    segments = new LineSegment[5];
+    segments = new LineSegment[10];
     count = 0;
 
     for (int i = 0; i < origins.length; i++) {
       // 1. think of every point p as the origin
+      // Point point = origins[i];
+      // Point swap = origins[0];
+      // origins[0] = origins[i];
+      // origins[i] = swap;
       Point point = origins[i];
 
       // 2. sort all other points q according to the slopes with p
@@ -27,6 +32,7 @@ public class FastCollinearPoints {
       // 3. check if any (3 or more) adjacent points make a line
       findLineSegments(i);
     }
+    downSize();
   }
 
   // the number of line segments
@@ -81,9 +87,9 @@ public class FastCollinearPoints {
           // continute until a truly "new" slope is found
           if (currentSlope == otherSlope)
           { numOfPoints++; }
-          else if (numOfPoints >= 4) {
-            // makeSegment()
-          } else {
+          else if (numOfPoints >= 4)
+          { makeSegment(index, i + 1); }
+          else {
             break;
           }
         }
@@ -92,7 +98,33 @@ public class FastCollinearPoints {
   }
 
   private void makeSegment(int start, int end) {
-    
+    upSize();
+    Point[] collinearPoints;
+    collinearPoints = Arrays.copyOfRange(origins, start, end);
+    Arrays.sort(collinearPoints);
+    Point first = collinearPoints[0];
+    Point last = collinearPoints[collinearPoints.length - 1];
+    LineSegment ls = new LineSegment(first, last);
+    segments[count++] = ls;
+
+  }
+
+  private void upSize() {
+    if (count == segments.length) {
+      LineSegment[] tmp = new LineSegment[segments.length + segments.length];
+      for (int i = 0; i < count; i++)
+      { tmp[i] = segments[i]; }
+      segments = tmp;
+    }
+  }
+
+  private void downSize() {
+    if (count < segments.length) {
+      LineSegment[] tmp = new LineSegment[count];
+      for (int i = 0; i < count; i++)
+      { tmp[i] = segments[i]; }
+      segments = tmp;
+    }
   }
 
   // unit testing
