@@ -18,10 +18,6 @@ public class FastCollinearPoints {
 
     for (int i = 0; i < origins.length; i++) {
       // 1. think of every point p as the origin
-      // Point point = origins[i];
-      // Point swap = origins[0];
-      // origins[0] = origins[i];
-      // origins[i] = swap;
       Point point = origins[i];
 
       // 2. sort all other points q according to the slopes with p
@@ -74,6 +70,7 @@ public class FastCollinearPoints {
 
   private void findLineSegments(Point[] origins, int index) {
     int originalIndex = index;
+    int loopK = index;
     StdOut.println("findLineSegments():");
     Point currentPoint = origins[index];
     if (index + 1 < origins.length) {
@@ -89,13 +86,20 @@ public class FastCollinearPoints {
         if (currentSlope == otherSlope)
         { numOfPoints++; }
         else {
-          if (numOfPoints >= 3)
-          { makeSegment(origins, index, k); }
+          StdOut.print("numOfPoints: " + numOfPoints + ", ");
+          if (numOfPoints >= 3) {
+            makeSegment(origins, index, k);
+            break;
+          }
           // index = i;
           currentSlope = otherSlope;
           numOfPoints = 2;
         }
+        loopK = k;
       }
+      StdOut.print("numOfPoints: " + numOfPoints + ", ");
+      if (numOfPoints >= 3)
+      { makeSegment(origins, index, loopK); }
       StdOut.println("end of " + originalIndex + "th iteration.");
       StdOut.println("=================================================");
     }
@@ -110,7 +114,6 @@ public class FastCollinearPoints {
     Point last = collinearPoints[collinearPoints.length - 1];
     LineSegment ls = new LineSegment(first, last);
     segments[count++] = ls;
-
   }
 
   private void upSize() {
