@@ -1,10 +1,23 @@
 public class Board {
+  int[][] tiles;
+  int N;
+
   // construct a board from an N-by-N array of blocks
   // (where blocks[i][j] = block in row i, column j)
-  public Board(int[][] blocks)
+  public Board(int[][] blocks) {
+    N = blocks.length;
+    tiles = new int[N][N];
+    for (int i = 0; i < N; i++) {
+      for (int k = 0; k < N; k++) {
+        tiles[i][j] = blocks[i][j];
+      }
+    }
+  }
 
   // board dimension N
-  public int dimension()
+  public int dimension() {
+    return N;
+  }
 
   // number of blocks out of place
   public int hamming()
