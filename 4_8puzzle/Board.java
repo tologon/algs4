@@ -25,7 +25,17 @@ public class Board {
   public Iterable<Board> neighbors()
 
   // string representation of this board (in the output format specified below)
-  public String toString()
+  public String toString() {
+    StringBuilder s = new StringBuilder();
+    s.append(N + "\n");
+    for (int i = 0; i < N; i++) {
+      for (int j = 0 ; j < N; j++) {
+        s.append(String.format("%2d ", tiles[i][j]));
+      }
+      s.append("\n");
+    }
+    return s.toString();
+  }
 
   // unit testing (not graded)
   public static void main(String[] args)
