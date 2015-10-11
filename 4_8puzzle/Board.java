@@ -44,21 +44,13 @@ public class Board {
   public Board twin() {
     Board twin;
     if (tiles[0][0] != 0 && tiles[0][1] != 0) {
-      int swap = tiles[0][0];
-      tiles[0][0] = tiles[0][1];
-      tiles[0][1] = swap;
+      swap(0, 0);
       twin = new Board(tiles);
-      swap = tiles[0][0];
-      tiles[0][0] = tiles[0][1];
-      tiles[0][1] = swap;
+      swap(0, 0);
     } else {
-      int swap = tiles[1][0];
-      tiles[1][0] = tiles[1][1];
-      tiles[1][1] = swap;
+      swap(1, 0);
       twin = new Board(tiles);
-      swap = tiles[1][0];
-      tiles[1][0] = tiles[1][1];
-      tiles[1][1] = swap;
+      swap(1, 0);
     }
     return twin;
   }
@@ -84,6 +76,12 @@ public class Board {
 
   private int coordinatesToIndex(int i, int j) {
     return N * i + j + 1;
+  }
+
+  private void swap(int i, int j) {
+    int swap = tiles[i][j];
+    tiles[i][j] = tiles[i][j + 1];
+    tiles[i][j + 1] = swap;
   }
 
   // unit testing (not graded)
