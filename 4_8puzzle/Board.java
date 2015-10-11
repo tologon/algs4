@@ -5,6 +5,7 @@ public class Board {
   private int[][] tiles;
   private int N;
   private boolean goal;
+  private int hamming;
 
   // construct a board from an N-by-N array of blocks
   // (where blocks[i][j] = block in row i, column j)
@@ -12,6 +13,8 @@ public class Board {
     N = blocks.length;
     tiles = new int[N][N];
     goal = true;
+    hamming = 0;
+
     for (int i = 0; i < N; i++) {
       for (int j= 0; j < N; j++) {
         tiles[i][j] = blocks[i][j];
@@ -19,6 +22,7 @@ public class Board {
         int goalBlock = coordinatesToIndex(i, j);
         if (goalBlock != N * N && tiles[i][j] != goalBlock) {
           goal = false;
+          hamming++;
         }
       }
     }
@@ -30,7 +34,9 @@ public class Board {
   }
 
   // number of blocks out of place
-  // public int hamming()
+  public int hamming() {
+    return hamming;
+  }
 
   // sum of Manhattan distances between blocks and goal
   // public int manhattan()
@@ -100,5 +106,7 @@ public class Board {
     StdOut.println("Is initial board is goal? " + initial.isGoal());
     StdOut.println("Is twin board is goal? " + copy.isGoal());
     StdOut.println("Initial board again (extra check):\n" + initial);
+    StdOut.print("# of blocks out of place (hamming f(x)): ");
+    StdOut.println(initial.hamming());
   }
 }
