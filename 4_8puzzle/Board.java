@@ -96,8 +96,11 @@ public class Board {
         for (int j = 0; j < N; j++)
             blocks[i][j] = in.readInt();
     Board initial = new Board(blocks);
-    StdOut.println("initial board:\n" + initial);
+    StdOut.println("Initial board:\n" + initial);
     Board copy = initial.twin();
-    StdOut.println("twin board:\n" + copy);
+    StdOut.println("Twin board:\n" + copy);
+    StdOut.println("Is initial board is goal? " + initial.isGoal());
+    StdOut.println("Is twin board is goal? " + copy.isGoal());
+    StdOut.println("Initial board again (extra check):\n" + initial);
   }
 }
