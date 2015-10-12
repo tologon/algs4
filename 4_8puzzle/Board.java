@@ -20,7 +20,7 @@ public class Board {
         tiles[i][j] = blocks[i][j];
 
         int goalBlock = coordinatesToIndex(i, j);
-        if (goalBlock != N * N && tiles[i][j] != goalBlock) {
+        if (blocks[i][j] != 0 && tiles[i][j] != goalBlock) {
           goal = false;
           hamming++;
         }
