@@ -2,9 +2,9 @@ import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.In;
 
 public class Board {
-  private int[][] tiles;
   private int N;
-  private boolean goal;
+  private int[][] tiles;
+  private int[][] goal;
   private int hamming;
 
   // construct a board from an N-by-N array of blocks
@@ -12,16 +12,16 @@ public class Board {
   public Board(int[][] blocks) {
     N = blocks.length;
     tiles = new int[N][N];
-    goal = true;
+    goal = new int[N][N];
     hamming = 0;
 
     for (int i = 0; i < N; i++) {
       for (int j= 0; j < N; j++) {
         tiles[i][j] = blocks[i][j];
-
         int goalBlock = coordinatesToIndex(i, j);
-        if (blocks[i][j] != 0 && tiles[i][j] != goalBlock) {
-          goal = false;
+        goal[i][j] = goalBlock;
+
+        if (tiles[i][j] != 0 && tiles[i][j] != goalBlock) {
           hamming++;
         }
       }
@@ -39,11 +39,21 @@ public class Board {
   }
 
   // sum of Manhattan distances between blocks and goal
-  // public int manhattan()
+  public int manhattan() {
+    int manhattan = 0;
+    for (int i = 0; i < N; i++) {
+      for (int j = 0; j < N; j++) {
+        if (tiles[i][j] != goal[i][j]) {
+          manhattan += (calculateDistance(i, j));
+        }
+      }
+    }
+    return manhattan;
+  }
 
   // is this board the goal board?
   public boolean isGoal() {
-    return goal;
+    return tiles.equals(goal);
   }
 
   // a board that is obtained by exchanging any pair of blocks
@@ -113,6 +123,20 @@ public class Board {
     tiles[i][j + 1] = swap;
   }
 
+  private int calculateDistance(int row, int column) {
+    int distance = 0;
+    for (int i = 0; i < N; i++) {
+      for (int j = 0; j < N; j++) {
+        if (goal[i][j] == tiles[row][column]) {
+          return Math.abs(j - column) + Math.abs(row - i);
+        }
+      }
+    }
+    // failure safe measure:
+    // needed for compiler purposes only
+    return distance;
+  }
+
   // unit testing (not graded)
   public static void main(String[] args) {
     // create initial board from file
@@ -131,6 +155,8 @@ public class Board {
     StdOut.println("Initial board again (extra check):\n" + initial);
     StdOut.print("# of blocks out of place (hamming f(x)): ");
     StdOut.println(initial.hamming());
+    StdOut.print("# of blocks out of place (manhattan f(x)): ");
+    StdOut.println(initial.manhattan());
     StdOut.print("check if initial & twin boards are equal: ");
     StdOut.println(initial.equals(copy));
     StdOut.print("check if initial board is equal to itself: ");
