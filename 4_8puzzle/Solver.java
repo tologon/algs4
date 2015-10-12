@@ -1,6 +1,7 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.MinPQ;
+import edu.princeton.cs.algs4.Stack;
 
 public class Solver {
   private boolean solvable;
@@ -27,16 +28,35 @@ public class Solver {
       else
       { return 1; }
     }
+
+    // TODO for debuggin purposes only; delete before submission
+    public String toString() {
+      StringBuilder s = new StringBuilder();
+      s.append("moves: " + moves + "\n");
+      s.append("priority: " + priority + "\n");
+      s.append("board:\n" + board);
+      return s.toString();
+    }
   }
 
   // find a solution to the initial board (using the A* algorithm)
   public Solver(Board initial) {
     if (initial == null) throw new NullPointerException();
 
+    solvable = true;
+
     pq = new MinPQ<Node>();
     // TODO implement constructor
-    Node node = new Node(initial, 0, null);
-    pq.insert(node);
+    Node start = new Node(initial, 0, null);
+    pq.insert(start);
+    Node minNode;
+    do {
+      minNode = pq.delMin();
+      StdOut.println(minNode);
+      Iterable<Node> nodes = neighbors(minNode);
+      for (Node node : nodes)
+      { pq.insert(node); }
+    } while (!isGoal(minNode));
   }
 
   // is the initial board solvable?
@@ -58,6 +78,26 @@ public class Solver {
 
     // TODO implement method
     return null;
+  }
+
+  // checks whether the board for a node is goal board
+  private boolean isGoal(Node node) {
+    return node.board.isGoal();
+  }
+
+  // gets all the neighboring nodes;
+  // implements critical optimization to avoid same boards
+  private Iterable<Node> neighbors(Node node) {
+    Iterable<Board> boards = node.board.neighbors();
+    Stack<Node> s = new Stack<>();
+    for (Board board : boards) {
+      // StdOut.println(board);
+      if (!board.equals(node.previous)) {
+        Node newNode = new Node(board, node.moves + 1, node.board);
+        s.push(newNode);
+      }
+    }
+    return s;
   }
 
   // solve a slider puzzle
