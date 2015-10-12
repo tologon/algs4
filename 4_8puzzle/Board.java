@@ -62,7 +62,30 @@ public class Board {
   }
 
   // does this board equal y?
-  // public boolean equals(Object y)
+  public boolean equals(Object y) {
+    // optimize for true object equality
+    if (y == this) return true;
+
+    // check for null
+    if (y == null) return false;
+
+    // objects must be in the same class
+    if (y.getClass() != this.getClass()) {
+      return false;
+    }
+
+    // check if all significant fields are the same
+    Board that = (Board) y;
+    for (int i = 0; i < N; i++) {
+      for (int j = 0; j < N; j++) {
+        if (this.tiles[i][j] != that.tiles[i][j]) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
 
   // all neighboring boards
   // public Iterable<Board> neighbors()
@@ -108,5 +131,9 @@ public class Board {
     StdOut.println("Initial board again (extra check):\n" + initial);
     StdOut.print("# of blocks out of place (hamming f(x)): ");
     StdOut.println(initial.hamming());
+    StdOut.print("check if initial & twin boards are equal: ");
+    StdOut.println(initial.equals(copy));
+    StdOut.print("check if initial board is equal to itself: ");
+    StdOut.println(initial.equals(initial));
   }
 }
