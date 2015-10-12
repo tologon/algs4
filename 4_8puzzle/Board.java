@@ -1,11 +1,13 @@
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.Stack;
 
 public class Board {
   private int N;
   private int[][] tiles;
   private int[][] goal;
   private int hamming;
+  private int zeroRow, zeroColumn;
 
   // construct a board from an N-by-N array of blocks
   // (where blocks[i][j] = block in row i, column j)
@@ -23,6 +25,10 @@ public class Board {
 
         if (tiles[i][j] != 0 && tiles[i][j] != goalBlock) {
           hamming++;
+        }
+        else if (tiles[i][j] == 0) {
+          zeroRow = i;
+          zeroColumn = j;
         }
       }
     }
@@ -98,7 +104,18 @@ public class Board {
   }
 
   // all neighboring boards
-  // public Iterable<Board> neighbors()
+  public Iterable<Board> neighbors() {
+    Stack<Board> s = new Stack<>();
+    Board north = getNeighbor(zeroRow - 1, zeroColumn);
+    if (north != null)  s.push(north);
+    Board south = getNeighbor(zeroRow + 1, zeroColumn);
+    if (south != null)  s.push(south);
+    Board east = getNeighbor(zeroRow, zeroColumn + 1);
+    if (east != null)  s.push(east);
+    Board west = getNeighbor(zeroRow, zeroColumn - 1);
+    if (west != null)  s.push(west);
+    return s;
+  }
 
   // string representation of this board (in the output format specified below)
   public String toString() {
@@ -137,6 +154,20 @@ public class Board {
     return distance;
   }
 
+  private Board getNeighbor(int i, int j) {
+    // if out of bonds, don't make a neighbor
+    if (i >= N || i < 0 || j >= N || j < 0)   return null;
+
+    int swap = tiles[zeroRow][zeroColumn];
+    tiles[zeroRow][zeroColumn] = tiles[i][j];
+    tiles[i][j] = swap;
+    Board board = new Board(tiles);
+    swap = tiles[zeroRow][zeroColumn];
+    tiles[zeroRow][zeroColumn] = tiles[i][j];
+    tiles[i][j] = swap;
+    return board;
+  }
+
   // unit testing (not graded)
   public static void main(String[] args) {
     // create initial board from file
@@ -153,13 +184,19 @@ public class Board {
     StdOut.println("Is initial board is goal? " + initial.isGoal());
     StdOut.println("Is twin board is goal? " + copy.isGoal());
     StdOut.println("Initial board again (extra check):\n" + initial);
+
     StdOut.print("# of blocks out of place (hamming f(x)): ");
     StdOut.println(initial.hamming());
     StdOut.print("# of blocks out of place (manhattan f(x)): ");
     StdOut.println(initial.manhattan());
+
     StdOut.print("check if initial & twin boards are equal: ");
     StdOut.println(initial.equals(copy));
     StdOut.print("check if initial board is equal to itself: ");
     StdOut.println(initial.equals(initial));
+
+    Iterable<Board> boards = initial.neighbors();
+    for (Board board : boards)
+    { StdOut.println(board); }
   }
 }
