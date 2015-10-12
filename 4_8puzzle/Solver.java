@@ -6,17 +6,37 @@ public class Solver {
   private boolean solvable;
   private MinPQ<Node> pq;
 
-  private class Node {
+  private class Node implements Comparable<Node> {
     private Board board;
     private int moves;
     private Board previous;
+    private int priority;
+
+    private Node(Board board, int moves, Board previous) {
+      this.board = board;
+      this.moves = moves;
+      this.previous = previous;
+      this.priority = this.moves + board.manhattan();
+    }
+
+    public int compareTo(Solver.Node that) {
+      if (this.priority == that.priority)
+      { return 0; }
+      else if (this.priority < that.priority)
+      { return - 1; }
+      else
+      { return 1; }
+    }
   }
 
   // find a solution to the initial board (using the A* algorithm)
   public Solver(Board initial) {
     if (initial == null) throw new NullPointerException();
 
+    pq = new MinPQ<Node>();
     // TODO implement constructor
+    Node node = new Node(initial, 0, null);
+    pq.insert(node);
   }
 
   // is the initial board solvable?
