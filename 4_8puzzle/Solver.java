@@ -70,8 +70,10 @@ public class Solver {
 
     if (minNode.board.equals(initial))
     { goalNode = minNode; }
-    else
-    { moves = -1; }
+    else {
+      solution = null;
+      moves = -1;
+    }
   }
 
   // is the initial board solvable?
