@@ -35,42 +35,43 @@ public class Solver {
   // find a solution to the initial board (using the A* algorithm)
   public Solver(Board initial) {
     if (initial == null) throw new NullPointerException();
-    moves = -1;
 
     MinPQ<Node> mainPQ = new MinPQ<Node>();
     Node start = new Node(initial, 0, null);
     mainPQ.insert(start);
 
-    MinPQ<Node> twinPQ = new MinPQ<Node>();
+    // MinPQ<Node> twinPQ = new MinPQ<Node>();
     Node twin = new Node(initial.twin(), 0, null);
-    twinPQ.insert(twin);
+    mainPQ.insert(twin);
 
     Node minNode;
-    Node twinNode;
+    // Node twinNode;
     do {
       minNode = mainPQ.delMin();
       Iterable<Node> nodes = neighbors(minNode);
       for (Node node : nodes)
       { mainPQ.insert(node); }
 
-      twinNode = twinPQ.delMin();
-      Iterable<Node> twinNodes = neighbors(twinNode);
-      for (Node node : twinNodes)
-      { twinPQ.insert(node); }
-    } while ((!isGoal(minNode)) && (!isGoal(twinNode)));
+      // twinNode = twinPQ.delMin();
+      // Iterable<Node> twinNodes = neighbors(twinNode);
+      // for (Node node : twinNodes)
+      // { twinPQ.insert(node); }
+    } while (!isGoal(minNode));
 
-    if (isGoal(minNode)) {
-      goalNode = minNode;
-      moves = goalNode.moves;
-      solution = new Stack<>();
-      Board board = goalNode.board;
+    moves = minNode.moves;
+    solution = new Stack<>();
+    Board board = minNode.board;
+    solution.push(board);
+    while (minNode.previous != null) {
+      minNode = minNode.previous;
+      board = minNode.board;
       solution.push(board);
-      while (goalNode.previous != null) {
-        goalNode = goalNode.previous;
-        board = goalNode.board;
-        solution.push(board);
-      }
     }
+
+    if (minNode.board.equals(initial))
+    { goalNode = minNode; }
+    else
+    { moves = -1 ;}
   }
 
   // is the initial board solvable?
