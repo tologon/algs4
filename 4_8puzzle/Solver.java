@@ -4,16 +4,15 @@ import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.Stack;
 
 public class Solver {
-  private boolean solvable;
-  private MinPQ<Node> pq;
+  private Node goalNode;
 
   private class Node implements Comparable<Node> {
     private Board board;
     private int moves;
-    private Board previous;
+    private Node previous;
     private int priority;
 
-    private Node(Board board, int moves, Board previous) {
+    private Node(Board board, int moves, Node previous) {
       this.board = board;
       this.moves = moves;
       this.previous = previous;
@@ -43,27 +42,47 @@ public class Solver {
   public Solver(Board initial) {
     if (initial == null) throw new NullPointerException();
 
-    solvable = true;
-
-    pq = new MinPQ<Node>();
-    // TODO implement constructor
+    MinPQ<Node> mainPQ = new MinPQ<Node>();
     Node start = new Node(initial, 0, null);
-    pq.insert(start);
+    mainPQ.insert(start);
+
+    MinPQ<Node> twinPQ = new MinPQ<Node>();
+    Node twin = new Node(initial.twin(), 0, null);
+    twinPQ.insert(twin);
+
     Node minNode;
+    Node twinNode;
     do {
-      minNode = pq.delMin();
+      minNode = mainPQ.delMin();
       Iterable<Node> nodes = neighbors(minNode);
-      for (Node node : nodes) {
-        pq.insert(node);
+      for (Node node : nodes)
+      { mainPQ.insert(node); }
+
+      twinNode = twinPQ.delMin();
+      Iterable<Node> twinNodes = neighbors(twinNode);
+      for (Node node : twinNodes)
+      { twinPQ.insert(node); }
+    } while ((!isGoal(minNode)) && (!isGoal(twinNode)));
+
+    if (isGoal(minNode)) {
+      goalNode = minNode;
+      Stack<Board> s = new Stack<>();
+      Board board = goalNode.board;
+      s.push(board);
+      while (goalNode.previous != null) {
+        goalNode = goalNode.previous;
+        board = goalNode.board;
+        s.push(board);
       }
-    } while (!isGoal(minNode));
+    }
   }
 
   // is the initial board solvable?
   public boolean isSolvable() {
-    return solvable;
+    return goalNode != null;
   }
 
+  // TODO
   // min number of moves to solve initial board; -1 if unsolvable
   public int moves() {
     if (!isSolvable())  return -1;
@@ -72,6 +91,7 @@ public class Solver {
     return 0;
   }
 
+  // TODO
   // sequence of boards in a shortest solution; null if unsolvable
   public Iterable<Board> solution() {
     if (!isSolvable())  return null;
@@ -91,9 +111,8 @@ public class Solver {
     Iterable<Board> boards = node.board.neighbors();
     Stack<Node> s = new Stack<>();
     for (Board board : boards) {
-      // StdOut.println(board);
-      if (!board.equals(node.previous)) {
-        Node newNode = new Node(board, node.moves + 1, node.board);
+      if (!board.equals(node.previous.board)) {
+        Node newNode = new Node(board, node.moves + 1, node);
         s.push(newNode);
       }
     }
