@@ -18,7 +18,7 @@ public class Board {
     hamming = 0;
 
     for (int i = 0; i < N; i++) {
-      for (int j= 0; j < N; j++) {
+      for (int j = 0; j < N; j++) {
         tiles[i][j] = blocks[i][j];
         int goalBlock = coordinatesToIndex(i, j);
         if (goalBlock == N * N)
@@ -126,7 +126,7 @@ public class Board {
     StringBuilder s = new StringBuilder();
     s.append(N + "\n");
     for (int i = 0; i < N; i++) {
-      for (int j = 0 ; j < N; j++) {
+      for (int j = 0; j < N; j++) {
         s.append(String.format("%2d ", tiles[i][j]));
       }
       s.append("\n");
@@ -197,7 +197,7 @@ public class Board {
     StdOut.print("check if initial & twin boards are equal: ");
     StdOut.println(initial.equals(copy));
     StdOut.print("check if initial board is equal to itself: ");
-    StdOut.println(initial.equals(initial));
+    // StdOut.println(initial.equals(initial));
 
     Iterable<Board> boards = initial.neighbors();
     for (Board board : boards)

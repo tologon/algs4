@@ -25,18 +25,9 @@ public class Solver {
       if (this.priority == that.priority)
       { return 0; }
       else if (this.priority < that.priority)
-      { return - 1; }
+      { return -1; }
       else
       { return 1; }
-    }
-
-    // TODO for debuggin purposes only; delete before submission
-    public String toString() {
-      StringBuilder s = new StringBuilder();
-      s.append("moves: " + moves + "\n");
-      s.append("priority: " + priority + "\n");
-      s.append("board:\n" + board);
-      return s.toString();
     }
   }
 
