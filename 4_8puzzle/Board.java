@@ -84,28 +84,8 @@ public class Board {
 
   // does this board equal y?
   public boolean equals(Object y) {
-    // optimize for true object equality
-    if (y == this) return true;
-
-    // check for null
-    if (y == null) return false;
-
-    // objects must be in the same class
-    if (y.getClass() != this.getClass()) {
-      return false;
-    }
-
-    // check if all significant fields are the same
     Board that = (Board) y;
-    for (int i = 0; i < N; i++) {
-      for (int j = 0; j < N; j++) {
-        if (this.tiles[i][j] != that.tiles[i][j]) {
-          return false;
-        }
-      }
-    }
-
-    return true;
+    return java.util.Arrays.deepEquals(this.tiles, that.tiles);
   }
 
   // all neighboring boards
