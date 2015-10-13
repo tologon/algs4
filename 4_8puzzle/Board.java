@@ -52,7 +52,8 @@ public class Board {
     int manhattan = 0;
     for (int i = 0; i < N; i++) {
       for (int j = 0; j < N; j++) {
-        if (tiles[i][j] != goal[i][j]) {
+        if (tiles[i][j] != 0
+         && tiles[i][j] != goal[i][j]) {
           manhattan += (calculateDistance(i, j));
         }
       }
