@@ -6,8 +6,6 @@ public class Board {
   private int N;
   private int[][] tiles;
   private boolean goal;
-  private int hamming;
-  private int zeroRow, zeroColumn;
 
   // construct a board from an N-by-N array of blocks
   // (where blocks[i][j] = block in row i, column j)
@@ -15,21 +13,14 @@ public class Board {
     N = blocks.length;
     tiles = new int[N][N];
     goal = true;
-    hamming = 0;
 
     for (int i = 0; i < N; i++) {
       for (int j = 0; j < N; j++) {
         tiles[i][j] = blocks[i][j];
         int goalBlock = coordinatesToIndex(i, j);
 
-        if (tiles[i][j] != 0 && tiles[i][j] != goalBlock) {
-          goal = false;
-          hamming++;
-        }
-        else if (tiles[i][j] == 0) {
-          zeroRow = i;
-          zeroColumn = j;
-        }
+        if (tiles[i][j] != 0 && tiles[i][j] != goalBlock)
+        { goal = false; }
       }
     }
   }
@@ -41,6 +32,13 @@ public class Board {
 
   // number of blocks out of place
   public int hamming() {
+    int hamming = 0;
+    for (int i = 0; i < N; i++) {
+      for (int j = 0; j < N; j++) {
+        if (tiles[i][j] != 0 && tiles[i][j] != coordinatesToIndex(i, j))
+        { hamming++; }
+      }
+    }
     return hamming;
   }
 
@@ -96,14 +94,27 @@ public class Board {
 
   // all neighboring boards
   public Iterable<Board> neighbors() {
+    int zeroRow = 0;
+    int zeroColumn = 0;
+    boolean found = false;
+    for (int i = 0; i < N && found != true; i++) {
+      for (int j = 0; j < N && found != true; j++) {
+        if (tiles[i][j] == 0) {
+          zeroRow = i;
+          zeroColumn = j;
+          found = true;
+        }
+      }
+    }
+
     Stack<Board> s = new Stack<>();
-    Board north = getNeighbor(zeroRow - 1, zeroColumn);
+    Board north = getNeighbor(zeroRow - 1, zeroColumn, zeroRow, zeroColumn);
     if (north != null)  s.push(north);
-    Board south = getNeighbor(zeroRow + 1, zeroColumn);
+    Board south = getNeighbor(zeroRow + 1, zeroColumn, zeroRow, zeroColumn);
     if (south != null)  s.push(south);
-    Board east = getNeighbor(zeroRow, zeroColumn + 1);
+    Board east = getNeighbor(zeroRow, zeroColumn + 1, zeroRow, zeroColumn);
     if (east != null)  s.push(east);
-    Board west = getNeighbor(zeroRow, zeroColumn - 1);
+    Board west = getNeighbor(zeroRow, zeroColumn - 1, zeroRow, zeroColumn);
     if (west != null)  s.push(west);
     return s;
   }
@@ -145,7 +156,7 @@ public class Board {
     return distance;
   }
 
-  private Board getNeighbor(int i, int j) {
+  private Board getNeighbor(int i, int j, int zeroRow, int zeroColumn) {
     // if out of bonds, don't make a neighbor
     if (i >= N || i < 0 || j >= N || j < 0)   return null;
 
