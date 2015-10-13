@@ -111,10 +111,11 @@ public class Solver {
     Iterable<Board> boards = node.board.neighbors();
     Stack<Node> s = new Stack<>();
     for (Board board : boards) {
-      if (!board.equals(node.previous.board)) {
-        Node newNode = new Node(board, node.moves + 1, node);
-        s.push(newNode);
-      }
+      Node newNode = new Node(board, node.moves + 1, node);
+      if (node.previous == null)
+      { s.push(newNode); }
+      else if (!node.previous.board.equals(newNode.board))
+      { s.push(newNode); }
     }
     return s;
   }
