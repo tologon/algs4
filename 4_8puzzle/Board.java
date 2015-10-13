@@ -5,7 +5,7 @@ import edu.princeton.cs.algs4.Stack;
 public class Board {
   private int N;
   private int[][] tiles;
-  private int[][] goal;
+  private boolean goal;
   private int hamming;
   private int zeroRow, zeroColumn;
 
@@ -14,19 +14,16 @@ public class Board {
   public Board(int[][] blocks) {
     N = blocks.length;
     tiles = new int[N][N];
-    goal = new int[N][N];
+    goal = true;
     hamming = 0;
 
     for (int i = 0; i < N; i++) {
       for (int j = 0; j < N; j++) {
         tiles[i][j] = blocks[i][j];
         int goalBlock = coordinatesToIndex(i, j);
-        if (goalBlock == N * N)
-        { goal[i][j] = 0; }
-        else
-        { goal[i][j] = goalBlock; }
 
         if (tiles[i][j] != 0 && tiles[i][j] != goalBlock) {
+          goal = false;
           hamming++;
         }
         else if (tiles[i][j] == 0) {
@@ -52,8 +49,7 @@ public class Board {
     int manhattan = 0;
     for (int i = 0; i < N; i++) {
       for (int j = 0; j < N; j++) {
-        if (tiles[i][j] != 0
-         && tiles[i][j] != goal[i][j]) {
+        if (tiles[i][j] != 0 && tiles[i][j] != coordinatesToIndex(i, j)) {
           manhattan += (calculateDistance(i, j));
         }
       }
@@ -63,8 +59,7 @@ public class Board {
 
   // is this board the goal board?
   public boolean isGoal() {
-    Board tmp = new Board(goal);
-    return this.equals(tmp);
+    return goal;
   }
 
   // a board that is obtained by exchanging any pair of blocks
@@ -129,7 +124,7 @@ public class Board {
     int distance = 0;
     for (int i = 0; i < N; i++) {
       for (int j = 0; j < N; j++) {
-        if (goal[i][j] == tiles[row][column]) {
+        if (coordinatesToIndex(i, j) == tiles[row][column]) {
           return Math.abs(j - column) + Math.abs(row - i);
         }
       }
