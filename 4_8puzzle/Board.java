@@ -21,7 +21,10 @@ public class Board {
       for (int j= 0; j < N; j++) {
         tiles[i][j] = blocks[i][j];
         int goalBlock = coordinatesToIndex(i, j);
-        goal[i][j] = goalBlock;
+        if (goalBlock == N * N)
+        { goal[i][j] = 0; }
+        else
+        { goal[i][j] = goalBlock; }
 
         if (tiles[i][j] != 0 && tiles[i][j] != goalBlock) {
           hamming++;
@@ -59,6 +62,9 @@ public class Board {
 
   // is this board the goal board?
   public boolean isGoal() {
+    StdOut.println("Goal board:");
+    Board tmp = new Board(goal);
+    StdOut.println(tmp);
     return tiles.equals(goal);
   }
 
