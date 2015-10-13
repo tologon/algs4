@@ -2,6 +2,7 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.Stack;
+// import edu.princeton.cs.algs4.Stopwatch;
 
 public class Solver {
   private Node goalNode;
@@ -116,10 +117,13 @@ public class Solver {
     for (int i = 0; i < N; i++)
         for (int j = 0; j < N; j++)
             blocks[i][j] = in.readInt();
+
+    // Stopwatch sw = new Stopwatch();
     Board initial = new Board(blocks);
 
     // solve the puzzle
     Solver solver = new Solver(initial);
+    // StdOut.println("elapsed time (in seconds): " + sw.elapsedTime());
 
     // print solution to standard output
     if (!solver.isSolvable())
