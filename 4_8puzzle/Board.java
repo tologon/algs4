@@ -62,10 +62,8 @@ public class Board {
 
   // is this board the goal board?
   public boolean isGoal() {
-    StdOut.println("Goal board:");
     Board tmp = new Board(goal);
-    StdOut.println(tmp);
-    return tiles.equals(goal);
+    return this.equals(tmp);
   }
 
   // a board that is obtained by exchanging any pair of blocks

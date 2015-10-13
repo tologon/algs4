@@ -52,10 +52,10 @@ public class Solver {
     Node minNode;
     do {
       minNode = pq.delMin();
-      StdOut.println(minNode);
       Iterable<Node> nodes = neighbors(minNode);
-      for (Node node : nodes)
-      { pq.insert(node); }
+      for (Node node : nodes) {
+        pq.insert(node);
+      }
     } while (!isGoal(minNode));
   }
 
