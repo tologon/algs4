@@ -5,6 +5,8 @@ import edu.princeton.cs.algs4.Stack;
 
 public class Solver {
   private Node goalNode;
+  private int moves;
+  private Stack<Board> solution;
 
   private class Node implements Comparable<Node> {
     private Board board;
@@ -41,6 +43,7 @@ public class Solver {
   // find a solution to the initial board (using the A* algorithm)
   public Solver(Board initial) {
     if (initial == null) throw new NullPointerException();
+    moves = -1;
 
     MinPQ<Node> mainPQ = new MinPQ<Node>();
     Node start = new Node(initial, 0, null);
@@ -66,13 +69,14 @@ public class Solver {
 
     if (isGoal(minNode)) {
       goalNode = minNode;
-      Stack<Board> s = new Stack<>();
+      moves = goalNode.moves;
+      solution = new Stack<>();
       Board board = goalNode.board;
-      s.push(board);
+      solution.push(board);
       while (goalNode.previous != null) {
         goalNode = goalNode.previous;
         board = goalNode.board;
-        s.push(board);
+        solution.push(board);
       }
     }
   }
@@ -82,22 +86,14 @@ public class Solver {
     return goalNode != null;
   }
 
-  // TODO
   // min number of moves to solve initial board; -1 if unsolvable
   public int moves() {
-    if (!isSolvable())  return -1;
-
-    // TODO implement method
-    return 0;
+    return moves;
   }
 
-  // TODO
   // sequence of boards in a shortest solution; null if unsolvable
   public Iterable<Board> solution() {
-    if (!isSolvable())  return null;
-
-    // TODO implement method
-    return null;
+    return solution;
   }
 
   // checks whether the board for a node is goal board
