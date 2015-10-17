@@ -40,10 +40,39 @@ public class KdTree {
   }
 
   // add the point to the set (if it is not already in the set)
-  // public void insert(Point2D p)
+  public void insert(Point2D p) {
+    if (p == null)  throw new NullPointerException();
+
+    // if 2d-tree contains given p, skip insertion
+    if (contains(p))  return;
+
+    // for current node, if it is null, insert point there
+    // if not null, compare point with current node and move appropriately
+    Node currentNode = root;
+    boolean xCoordinate = true;
+    while (currentNode != null) {
+      Point2D q = currentNode.p;
+      if (xCoordinate) {
+        if (p.x() < q.x())
+        { currentNode = currentNode.lb; }
+        else
+        { currentNode = currentNode.rt; }
+        xCoordinate = false;
+      } else {
+        if (p.y() < q.y())
+        { currentNode = currentNode.lb; }
+        else
+        { currentNode = currentNode.rt; }
+        xCoordinate = true;
+      }
+    }
+    Node newNode = new Node(p, null, null);
+  }
 
   // does the set contain point p?
-  // public boolean contains(Point2D p)
+  public boolean contains(Point2D p) {
+    return true;
+  }
 
   // draw all points to standard draw
   // public void draw()
