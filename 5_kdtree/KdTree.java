@@ -139,9 +139,11 @@ public class KdTree {
     StdOut.println("tree.isEmpty(): " + tree.isEmpty());
     StdOut.println("tree.size(): " + tree.size());
     Point2D p1 = new Point2D(0.5, 0.5);
+    Point2D p2 = new Point2D(0.2, 0.7);
     tree.insert(p1);
     StdOut.print("[after insertion] ");
     StdOut.println("tree.isEmpty(): " + tree.isEmpty());
     StdOut.println("tree.contains(p1): " + tree.contains(p1));
+    StdOut.println("[not inserted] tree.contains(p2): " + tree.contains(p2));
   }
 }
