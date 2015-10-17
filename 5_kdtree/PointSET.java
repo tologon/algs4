@@ -96,6 +96,16 @@ public class PointSET {
     StdOut.println("pset.size(): " + pset.size());
     Point2D middleCopy = new Point2D(0.5, 0.5);
     pset.insert(middleCopy);
+    StdOut.println("[after inserting a copy] pset.size(): " + pset.size());
+    Point2D p1 = new Point2D(0.25, 0.25);
+    Point2D p2 = new Point2D(0.75, 0.25);
+    Point2D p3 = new Point2D(0.25, 0.75);
+    Point2D p4 = new Point2D(0.75, 0.75);
+    pset.insert(p1);
+    pset.insert(p2);
+    pset.insert(p3);
+    pset.insert(p4);
     StdOut.println("pset.size(): " + pset.size());
+    pset.draw();
   }
 }
