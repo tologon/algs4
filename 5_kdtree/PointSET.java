@@ -2,6 +2,7 @@ import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.SET;
 import edu.princeton.cs.algs4.Stack;
+import edu.princeton.cs.algs4.StdDraw;
 
 import java.util.Iterator;
 
@@ -39,8 +40,10 @@ public class PointSET {
   public void draw() {
     Iterator<Point2D> points = bst.iterator();
 
-    while (!points.hasNext()) {
+    while (points.hasNext()) {
       Point2D point = points.next();
+      StdDraw.setPenColor(StdDraw.BLACK);
+      StdDraw.setPenRadius(0.01);
       point.draw();
     }
   }
@@ -52,7 +55,7 @@ public class PointSET {
     Iterator<Point2D> bstPoints = bst.iterator();
     Stack<Point2D> stack = new Stack<>();
 
-    while(!bstPoints.hasNext()) {
+    while(bstPoints.hasNext()) {
       Point2D point = bstPoints.next();
       if (rect.contains(point))
       { stack.push(point); }
@@ -69,7 +72,7 @@ public class PointSET {
     Point2D neighbor = null;
     Iterator<Point2D> points = bst.iterator();
 
-    while (!points.hasNext()) {
+    while (points.hasNext()) {
       Point2D point = points.next();
       if (minDistance == -1.0
        || point.distanceSquaredTo(p) < minDistance) {
