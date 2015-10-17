@@ -77,6 +77,7 @@ public class PointSET {
       if (minDistance == -1.0
        || point.distanceSquaredTo(p) < minDistance) {
          neighbor = point;
+         minDistance = point.distanceSquaredTo(p);
       }
     }
     return neighbor;
@@ -114,6 +115,11 @@ public class PointSET {
     StdOut.println("Points in the main rectangle:");
     for (Point2D p : allPoints)
     { StdOut.println(p); }
-
+    Point2D n1 = new Point2D(0.9, 0.9);
+    StdOut.println("pset.nearest(): " + pset.nearest(n1));
+    Point2D n2 = new Point2D(0.6, 0.1);
+    StdOut.println("pset.nearest(): " + pset.nearest(n2));
+    Point2D n3 = new Point2D(0.5, 0.6);
+    StdOut.println("pset.nearest(): " + pset.nearest(n3));
   }
 }
