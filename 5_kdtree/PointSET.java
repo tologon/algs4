@@ -36,14 +36,28 @@ public class PointSET {
     return bst.contains(p);
   }
 
+  // TODO update this method for correct functionality
   // draw all points to standard draw
   public void draw() {
     Iterator<Point2D> points = bst.iterator();
 
+
+    boolean vertical = true;
     while (points.hasNext()) {
       Point2D point = points.next();
+      if (vertical) {
+        StdDraw.setPenColor(StdDraw.RED);
+        StdDraw.setPenRadius();
+        StdDraw.line(point.x(), 0, point.x(), 1);
+        vertical = false;
+      } else {
+        StdDraw.setPenColor(StdDraw.BLUE);
+        StdDraw.setPenRadius();
+        StdDraw.line(0, point.y(), 1, point.y());
+        vertical = true;
+      }
       StdDraw.setPenColor(StdDraw.BLACK);
-      StdDraw.setPenRadius(0.01);
+      StdDraw.setPenRadius(.01);
       point.draw();
     }
   }
