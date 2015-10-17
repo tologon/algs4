@@ -101,11 +101,19 @@ public class PointSET {
     Point2D p2 = new Point2D(0.75, 0.25);
     Point2D p3 = new Point2D(0.25, 0.75);
     Point2D p4 = new Point2D(0.75, 0.75);
+    Point2D p5 = new Point2D(0.10, 0.10);
     pset.insert(p1);
     pset.insert(p2);
     pset.insert(p3);
     pset.insert(p4);
+    pset.insert(p5);
     StdOut.println("pset.size(): " + pset.size());
     pset.draw();
+    RectHV mainRect = new RectHV(0, 0, 0.5, 1);
+    Iterable<Point2D> allPoints = pset.range(mainRect);
+    StdOut.println("Points in the main rectangle:");
+    for (Point2D p : allPoints)
+    { StdOut.println(p); }
+
   }
 }
