@@ -3,6 +3,7 @@ import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.SET;
 import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Iterator;
 
@@ -36,28 +37,13 @@ public class PointSET {
     return bst.contains(p);
   }
 
-  // TODO update this method for correct functionality
   // draw all points to standard draw
   public void draw() {
     Iterator<Point2D> points = bst.iterator();
-
-
-    boolean vertical = true;
+    StdDraw.setPenColor(StdDraw.BLACK);
+    StdDraw.setPenRadius(.01);
     while (points.hasNext()) {
       Point2D point = points.next();
-      if (vertical) {
-        StdDraw.setPenColor(StdDraw.RED);
-        StdDraw.setPenRadius();
-        StdDraw.line(point.x(), 0, point.x(), 1);
-        vertical = false;
-      } else {
-        StdDraw.setPenColor(StdDraw.BLUE);
-        StdDraw.setPenRadius();
-        StdDraw.line(0, point.y(), 1, point.y());
-        vertical = true;
-      }
-      StdDraw.setPenColor(StdDraw.BLACK);
-      StdDraw.setPenRadius(.01);
       point.draw();
     }
   }
@@ -98,6 +84,18 @@ public class PointSET {
 
   // unit testing of the methods
   public static void main(String[] args) {
-
+    PointSET pset = new PointSET();
+    StdOut.println("pset.isEmpty(): " + pset.isEmpty());
+    StdOut.println("pset.size(): " + pset.size());
+    Point2D middle = new Point2D(0.5, 0.5);
+    StdOut.print("[before insertion] ");
+    StdOut.println("pset.contains(middle): " + pset.contains(middle));
+    pset.insert(middle);
+    StdOut.print("[after insertion] ");
+    StdOut.println("pset.contains(middle): " + pset.contains(middle));
+    StdOut.println("pset.size(): " + pset.size());
+    Point2D middleCopy = new Point2D(0.5, 0.5);
+    pset.insert(middleCopy);
+    StdOut.println("pset.size(): " + pset.size());
   }
 }
