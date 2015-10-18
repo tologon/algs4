@@ -194,8 +194,11 @@ public class KdTree {
     StdOut.print("[before insertion] ");
     StdOut.println("tree.isEmpty(): " + tree.isEmpty());
     StdOut.println("tree.size(): " + tree.size());
-    Point2D p1 = new Point2D(0.5, 0.5);
-    Point2D p2 = new Point2D(0.2, 0.7);
+    Point2D p1 = new Point2D(0.50, 0.50);
+    Point2D p2 = new Point2D(0.25, 0.60);
+    Point2D p3 = new Point2D(0.75, 0.40);
+    Point2D p4 = new Point2D(0.15, 0.30);
+    Point2D p5 = new Point2D(0.85, 0.70);
     tree.insert(p1);
     StdOut.print("[after insertion] ");
     StdOut.println("tree.isEmpty(): " + tree.isEmpty());
@@ -206,6 +209,9 @@ public class KdTree {
     StdOut.print("[after insertion] ");
     StdOut.println("tree.contains(p2): " + tree.contains(p2));
     StdOut.println("tree.size(): " + tree.size());
+    tree.insert(p3);
+    tree.insert(p4);
+    tree.insert(p5);
     tree.draw();
   }
 }
