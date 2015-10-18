@@ -64,13 +64,45 @@ public class KdTree {
   }
 
   // draw all points to standard draw
-  // public void draw()
+  public void draw() {
+    if (root == null)   return;
+
+    Node currentNode = root;
+    // draw a point with corresponding line at root
+    // drawTree() method
+    drawTree(true, currentNode);
+  }
 
   // all points that are inside the rectangle
   // public Iterable<Point2D> range(RectHV rect)
 
   // a nearest neighbor in the set to point p; null if the set is empty
   // public Point2D nearest(Point2D p)
+
+  // draw current's node point & line
+  // and then recursively draws subtrees
+  private void drawTree(double min, double max, boolean vertical, Node node) {
+    StdDraw.setPenColor(StdDraw.BLACK);
+    StdDraw.setPenRadius(0.01);
+    node.p.draw();
+    if (vertical) {
+      StdDraw.setPenColor(StdDraw.RED);
+      StdDraw.setPenRadius();
+      StdDraw.line(node.p.x(), min, node.p.x(), max);
+      // if left-bottom child is not null,
+      // proceed wit drawTree() with xmin and xmax
+      // if right-top child is not null,
+      // proceed wit drawTree() with xmin and xmax
+    } else {
+      StdDraw.setPenColor(StdDraw.BLUE);
+      StdDraw.setPenRadius();
+      StdDraw.line(min, node.p.y(), max, node.p.y());
+      // if left-bottom child is not null,
+      // proceed wit drawTree() with ymin and ymax
+      // if right-top child is not null,
+      // proceed wit drawTree() with ymin and ymax
+    }
+  }
 
   private void insert(Node currentNode, Node newNode) {
     boolean xCoordinate = true;
@@ -144,6 +176,11 @@ public class KdTree {
     StdOut.print("[after insertion] ");
     StdOut.println("tree.isEmpty(): " + tree.isEmpty());
     StdOut.println("tree.contains(p1): " + tree.contains(p1));
-    StdOut.println("[not inserted] tree.contains(p2): " + tree.contains(p2));
+    StdOut.print("[before insertion] ");
+    StdOut.println("tree.contains(p2): " + tree.contains(p2));
+    tree.insert(p2);
+    StdOut.print("[after insertion] ");
+    StdOut.println("tree.contains(p2): " + tree.contains(p2));
+    StdOut.println("tree.size(): " + tree.size());
   }
 }
