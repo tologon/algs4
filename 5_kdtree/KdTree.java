@@ -79,10 +79,25 @@ public class KdTree {
   }
 
   // all points that are inside the rectangle
-  // public Iterable<Point2D> range(RectHV rect)
+  public Iterable<Point2D> range(RectHV rect) {
+    if (rect == null)   throw new NullPointerException();
+
+    Stack<Point2D> stack = new Stack<>();
+    range(stack, root, rect);
+    return stack;
+  }
 
   // a nearest neighbor in the set to point p; null if the set is empty
   // public Point2D nearest(Point2D p)
+
+  private void range(Stack<Point2D> s, Node node, RectHV rect) {
+    if (node != null && rect.intersects(node.r)) {
+      if (rect.contains(node.p))
+      { s.push(node.p); }
+      range(s, node.lb, rect);
+      range(s, node.rt, rect);
+    }
+  }
 
   // draw current's node point & line
   // and then recursively draws subtrees
@@ -213,5 +228,10 @@ public class KdTree {
     tree.insert(p4);
     tree.insert(p5);
     tree.draw();
+    RectHV rect = new RectHV(0, 0, 0.5, 1);
+    Iterable<Point2D> points = tree.range(rect);
+    StdOut.println("points inside of the rectangle: " + rect);
+    for (Point2D point : points)
+    { StdOut.println(point); }
   }
 }
