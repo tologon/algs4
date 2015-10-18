@@ -75,7 +75,7 @@ public class KdTree {
     Node currentNode = root;
     // draw a point with corresponding line at root
     // drawTree() method
-    // drawTree(true, currentNode);
+    drawTree(true, currentNode);
   }
 
   // all points that are inside the rectangle
@@ -86,28 +86,28 @@ public class KdTree {
 
   // draw current's node point & line
   // and then recursively draws subtrees
-  // private void drawTree(double min, double max, boolean vertical, Node node) {
-  //   StdDraw.setPenColor(StdDraw.BLACK);
-  //   StdDraw.setPenRadius(0.01);
-  //   node.p.draw();
-  //   if (vertical) {
-  //     StdDraw.setPenColor(StdDraw.RED);
-  //     StdDraw.setPenRadius();
-  //     StdDraw.line(node.p.x(), min, node.p.x(), max);
-  //     // if left-bottom child is not null,
-  //     // proceed wit drawTree() with xmin and xmax
-  //     // if right-top child is not null,
-  //     // proceed wit drawTree() with xmin and xmax
-  //   } else {
-  //     StdDraw.setPenColor(StdDraw.BLUE);
-  //     StdDraw.setPenRadius();
-  //     StdDraw.line(min, node.p.y(), max, node.p.y());
-  //     // if left-bottom child is not null,
-  //     // proceed wit drawTree() with ymin and ymax
-  //     // if right-top child is not null,
-  //     // proceed wit drawTree() with ymin and ymax
-  //   }
-  // }
+  private void drawTree(boolean vertical, Node node) {
+    StdDraw.setPenColor(StdDraw.BLACK);
+    StdDraw.setPenRadius(0.01);
+    node.p.draw();
+    if (vertical) {
+      StdDraw.setPenColor(StdDraw.RED);
+      StdDraw.setPenRadius();
+      StdDraw.line(node.p.x(), node.r.ymin(), node.p.x(), node.r.ymax());
+      if (node.lb != null)
+      { drawTree(false, node.lb); }
+      if (node.rt != null)
+      { drawTree(false, node.rt); }
+    } else {
+      StdDraw.setPenColor(StdDraw.BLUE);
+      StdDraw.setPenRadius();
+      StdDraw.line(node.r.xmin(), node.p.y(), node.r.xmax(), node.p.y());
+      if (node.lb != null)
+      { drawTree(true, node.lb); }
+      if (node.rt != null)
+      { drawTree(true, node.rt); }
+    }
+  }
 
   private void insert(Node node, Point2D p) {
     boolean vertical = true;
@@ -164,25 +164,25 @@ public class KdTree {
     // for current node, if it is null, return null
     // if not null, compare point with current node and move appropriately
     Node currentNode = root;
-    boolean xCoordinate = true;
+    boolean vertical = true;
 
     while (currentNode != null) {
       Point2D q = currentNode.p;
       if (q.equals(p)) {
         return true;
       }
-      else if (xCoordinate) {
+      else if (vertical) {
         if (p.x() < q.x())
         { currentNode = currentNode.lb; }
         else
         { currentNode = currentNode.rt; }
-        xCoordinate = false;
+        vertical = false;
       } else {
         if (p.y() < q.y())
         { currentNode = currentNode.lb; }
         else
         { currentNode = currentNode.rt; }
-        xCoordinate = true;
+        vertical = true;
       }
     }
     return false;
@@ -206,5 +206,6 @@ public class KdTree {
     StdOut.print("[after insertion] ");
     StdOut.println("tree.contains(p2): " + tree.contains(p2));
     StdOut.println("tree.size(): " + tree.size());
+    tree.draw();
   }
 }
