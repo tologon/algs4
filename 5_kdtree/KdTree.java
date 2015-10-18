@@ -228,10 +228,12 @@ public class KdTree {
     tree.insert(p4);
     tree.insert(p5);
     tree.draw();
-    RectHV rect = new RectHV(0, 0, 0.5, 1);
+    RectHV rect = new RectHV(0.45, 0.45, 0.55, 0.55);
     Iterable<Point2D> points = tree.range(rect);
     StdOut.println("points inside of the rectangle: " + rect);
     for (Point2D point : points)
     { StdOut.println(point); }
+    StdDraw.setPenColor(StdDraw.MAGENTA);
+    rect.draw();
   }
 }
