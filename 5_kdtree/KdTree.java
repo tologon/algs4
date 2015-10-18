@@ -11,13 +11,16 @@ public class KdTree {
   private static class Node {
     // the point
     private Point2D p;
+    // the axis-aligned rectangle corresponding to this node
+    private RectHV r;
     // the left/bottom subtree
     private Node lb;
     // the right/top subtree
     private Node rt;
 
-    public Node(Point2D p, Node lb, Node rt) {
+    public Node(Point2D p, RectHV r, Node lb, Node rt) {
       this.p = p;
+      this.r = r;
       this.lb = lb;
       this.rt = rt;
     }
@@ -47,12 +50,16 @@ public class KdTree {
     if (contains(p))  return;
 
     Node currentNode = root;
-    Node newNode = new Node(p, null, null);
-
-    if (root == null)
-    { root = newNode; }
-    else
-    { insert(currentNode, newNode); }
+    Node newNode;
+    if (root == null) {
+      RectHV mainRect = new RectHV(0, 0, 1, 1);
+      newNode = new Node(p, mainRect, null, null);
+      root = newNode;
+    }
+    else {
+      // TODO update insert(node, node) to new version
+      insert(currentNode, newNode);
+    }
 
     count++;
   }
@@ -104,6 +111,7 @@ public class KdTree {
     }
   }
 
+  // TODO re-do the method to account for correct rectangle
   private void insert(Node currentNode, Node newNode) {
     boolean xCoordinate = true;
     Point2D p = newNode.p;
