@@ -49,16 +49,14 @@ public class KdTree {
     // if 2d-tree contains given p, skip insertion
     if (contains(p))  return;
 
-    Node currentNode = root;
-    Node newNode;
     if (root == null) {
       RectHV mainRect = new RectHV(0, 0, 1, 1);
-      newNode = new Node(p, mainRect, null, null);
+      Node newNode = new Node(p, mainRect, null, null);
       root = newNode;
     }
     else {
-      // TODO update insert(node, node) to new version
-      insert(currentNode, newNode);
+      Node currentNode = root;
+      insert(currentNode, p);
     }
 
     count++;
@@ -77,7 +75,7 @@ public class KdTree {
     Node currentNode = root;
     // draw a point with corresponding line at root
     // drawTree() method
-    drawTree(true, currentNode);
+    // drawTree(true, currentNode);
   }
 
   // all points that are inside the rectangle
@@ -88,59 +86,77 @@ public class KdTree {
 
   // draw current's node point & line
   // and then recursively draws subtrees
-  private void drawTree(double min, double max, boolean vertical, Node node) {
-    StdDraw.setPenColor(StdDraw.BLACK);
-    StdDraw.setPenRadius(0.01);
-    node.p.draw();
-    if (vertical) {
-      StdDraw.setPenColor(StdDraw.RED);
-      StdDraw.setPenRadius();
-      StdDraw.line(node.p.x(), min, node.p.x(), max);
-      // if left-bottom child is not null,
-      // proceed wit drawTree() with xmin and xmax
-      // if right-top child is not null,
-      // proceed wit drawTree() with xmin and xmax
-    } else {
-      StdDraw.setPenColor(StdDraw.BLUE);
-      StdDraw.setPenRadius();
-      StdDraw.line(min, node.p.y(), max, node.p.y());
-      // if left-bottom child is not null,
-      // proceed wit drawTree() with ymin and ymax
-      // if right-top child is not null,
-      // proceed wit drawTree() with ymin and ymax
-    }
-  }
+  // private void drawTree(double min, double max, boolean vertical, Node node) {
+  //   StdDraw.setPenColor(StdDraw.BLACK);
+  //   StdDraw.setPenRadius(0.01);
+  //   node.p.draw();
+  //   if (vertical) {
+  //     StdDraw.setPenColor(StdDraw.RED);
+  //     StdDraw.setPenRadius();
+  //     StdDraw.line(node.p.x(), min, node.p.x(), max);
+  //     // if left-bottom child is not null,
+  //     // proceed wit drawTree() with xmin and xmax
+  //     // if right-top child is not null,
+  //     // proceed wit drawTree() with xmin and xmax
+  //   } else {
+  //     StdDraw.setPenColor(StdDraw.BLUE);
+  //     StdDraw.setPenRadius();
+  //     StdDraw.line(min, node.p.y(), max, node.p.y());
+  //     // if left-bottom child is not null,
+  //     // proceed wit drawTree() with ymin and ymax
+  //     // if right-top child is not null,
+  //     // proceed wit drawTree() with ymin and ymax
+  //   }
+  // }
 
-  // TODO re-do the method to account for correct rectangle
-  private void insert(Node currentNode, Node newNode) {
-    boolean xCoordinate = true;
-    Point2D p = newNode.p;
+  private void insert(Node node, Point2D p) {
+    boolean vertical = true;
     while (true) {
-      Point2D q = currentNode.p;
-      // if left-bottom node is null, insert a new node there
-      if ((xCoordinate && p.x() < q.x() && currentNode.lb == null)
-      || (!xCoordinate && p.y() < q.y() && currentNode.lb == null)) {
-        currentNode.lb = newNode;
+      Point2D q = node.p;
+      // if left node is null, insert a new node there
+      if (vertical && p.x() < q.x() && node.lb == null) {
+        RectHV newRect = new RectHV(node.r.xmin(),  node.r.ymin(),
+                                    q.x(),          node.r.ymax());
+        Node newNode = new Node(p, newRect, null, null);
+        node.lb = newNode;
         break;
       }
-      // if right-top node is null, insert a new node there
-      else if ((xCoordinate && p.x() >= q.x() && currentNode.rt == null)
-           || (!xCoordinate && p.y() >= q.y() && currentNode.rt == null)) {
-        currentNode.rt = newNode;
+      // if bottom node is null, insert a new node there
+      else if (!vertical && p.y() < q.y() && node.lb == null) {
+        RectHV newRect = new RectHV(node.r.xmin(), node.r.ymin(),
+                                    node.r.xmax(), q.y());
+        Node newNode = new Node(p, newRect, null, null);
+        node.lb = newNode;
+        break;
+      }
+      // if right node is null, insert a new node there
+      else if (vertical && p.x() >= q.x() && node.rt == null) {
+        RectHV newRect = new RectHV(q.x(),        node.r.ymin(),
+                                    node.r.xmax(),  node.r.ymax());
+        Node newNode = new Node(p, newRect, null, null);
+        node.rt = newNode;
+        break;
+      }
+      // if top node is null, insert a new node there
+      else if (!vertical && p.y() >= q.y() && node.rt == null) {
+        RectHV newRect = new RectHV(node.r.xmin(), q.y(),
+                                    node.r.xmax(), node.r.ymax());
+        Node newNode = new Node(p, newRect, null, null);
+        node.rt = newNode;
         break;
       }
       // if left-bottom node is another node, explore it
-      else if ((xCoordinate && p.x() < q.x() && currentNode.lb != null)
-           || (!xCoordinate && p.y() < q.y() && currentNode.lb != null))
-      { currentNode = currentNode.lb; }
+      else if ((vertical && p.x() < q.x() && node.lb != null)
+           || (!vertical && p.y() < q.y() && node.lb != null))
+      { node = node.lb; }
       else
       // if right-top node is another node, explore it
-      { currentNode = currentNode.rt; }
+      { node = node.rt; }
 
-      if (xCoordinate)
-      { xCoordinate = false; }
+      if (vertical)
+      { vertical = false; }
       else
-      { xCoordinate = true; }
+      { vertical = true; }
     }
   }
 
