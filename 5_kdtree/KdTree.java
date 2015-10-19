@@ -95,37 +95,23 @@ public class KdTree {
   }
 
   private Point2D nearest(Node node, Point2D closest, Point2D p) {
-    double currentDistance = node.p.distanceSquaredTo(p);
-    double minDistance = closest.distanceSquaredTo(p);
-    Point2D cLB = closest;
-    double lbDistance = minDistance;
-    Point2D cRT = closest;
-    double rtDistance = minDistance;
-    if (node.lb != null
-     && node.lb.r.distanceSquaredTo(p) < minDistance) {
-       cLB = nearest(node.lb, closest, p);
-       lbDistance = cLB.distanceSquaredTo(p);
-     }
-    if (node.rt != null
-     && node.rt.r.distanceSquaredTo(p) < minDistance) {
-       cRT = nearest(node.rt, closest, p);
-       rtDistance = cRT.distanceSquaredTo(p);
-     }
+    StdOut.println("call from recursive nearest() method.");
+    StdOut.println("node.r: " + node.r);
+    if (node.p.distanceSquaredTo(p) < closest.distanceSquaredTo(p))
+    { closest = node.p; }
 
-    if (minDistance <= lbDistance
-     && minDistance <= rtDistance
-     && minDistance <= currentDistance)
-    { return closest; }
-    else if (lbDistance <= minDistance
-          && lbDistance <= rtDistance
-          && lbDistance <= currentDistance)
-    { return cLB; }
-    else if (rtDistance <= minDistance
-          && rtDistance <= lbDistance
-          && rtDistance <= currentDistance)
-    { return cRT; }
-    else
-    { return node.p; }
+    if (node.r.distanceSquaredTo(p) < closest.distanceSquaredTo(p)) {
+      if (node.lb != null && node.rt != null
+      && node.lb.r.distanceSquaredTo(p) < node.rt.r.distanceSquaredTo(p)
+      && node.lb.r.distanceSquaredTo(p) < closest.distanceSquaredTo(p))
+      { closest = nearest(node.lb, closest, p); }
+      if (node.lb != null && node.rt != null
+      && node.rt.r.distanceSquaredTo(p) < node.lb.r.distanceSquaredTo(p)
+      && node.rt.r.distanceSquaredTo(p) < closest.distanceSquaredTo(p))
+      { closest = nearest(node.rt, closest, p); }
+    }
+
+    return closest;
   }
 
   private void range(Stack<Point2D> s, Node node, RectHV rect) {
@@ -266,7 +252,7 @@ public class KdTree {
     tree.insert(p4);
     tree.insert(p5);
     tree.draw();
-    RectHV rect = new RectHV(0.45, 0.45, 0.55, 0.55);
+    RectHV rect = new RectHV(0, 0, 0.05, 0.05);
     Iterable<Point2D> points = tree.range(rect);
     StdOut.println("points inside of the rectangle: " + rect);
     for (Point2D point : points)
