@@ -55,7 +55,7 @@ public class PointSET {
     Iterator<Point2D> bstPoints = bst.iterator();
     Stack<Point2D> stack = new Stack<>();
 
-    while(bstPoints.hasNext()) {
+    while (bstPoints.hasNext()) {
       Point2D point = bstPoints.next();
       if (rect.contains(point))
       { stack.push(point); }
