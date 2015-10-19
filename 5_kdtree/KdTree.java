@@ -95,31 +95,33 @@ public class KdTree {
   }
 
   private Point2D nearest(Node node, Point2D closest, Point2D p) {
-    StdOut.println("call from recursive nearest() method.");
-    StdOut.println("node.r: " + node.r);
 
     if (node.r.distanceSquaredTo(p) < closest.distanceSquaredTo(p)) {
-      if (node.p.distanceSquaredTo(p) < closest.distanceSquaredTo(p)) {
-        closest = node.p;
-        StdOut.println("[1st IF] current closest: " + closest);
-      }
+      // check the point in the current node
+      if (node.p.distanceSquaredTo(p) < closest.distanceSquaredTo(p))
+      { closest = node.p; }
+      // check left-bottom node if it exists & right-top doesn't
+      if (node.lb != null && node.rt == null)
+      { closest = nearest(node.lb, closest, p); }
+      // check right-top node if it exists & left-bottom doesn't
+      if (node.rt != null && node.lb == null)
+      { closest = nearest(node.rt, closest, p); }
 
+      // check left-bottom node first
+      // because it contains the query point
       if (node.lb != null && node.rt != null
-      && node.lb.r.distanceSquaredTo(p) < node.rt.r.distanceSquaredTo(p)
-      && node.lb.r.distanceSquaredTo(p) < closest.distanceSquaredTo(p)) {
+      && node.lb.r.contains(p)) {
         closest = nearest(node.lb, closest, p);
-        StdOut.println("[2nd IF] current closest: " + closest);
-      }
-
-      if (node.lb != null && node.rt != null
-      && node.rt.r.distanceSquaredTo(p) < node.lb.r.distanceSquaredTo(p)
-      && node.rt.r.distanceSquaredTo(p) < closest.distanceSquaredTo(p)) {
         closest = nearest(node.rt, closest, p);
-        StdOut.println("[3rd IF] current closest: " + closest);
+      }
+      // check right-top node first
+      // because it contains the query point
+      else if (node.lb != null && node.rt != null
+      && node.rt.r.contains(p)) {
+        closest = nearest(node.rt, closest, p);
+        closest = nearest(node.lb, closest, p);
       }
     }
-
-    StdOut.println("###### end of the recursive call ######");
     return closest;
   }
 
@@ -268,10 +270,10 @@ public class KdTree {
     { StdOut.println(point); }
     StdDraw.setPenColor(StdDraw.MAGENTA);
     rect.draw();
-    StdOut.println("tree.nearest(p1): " + tree.nearest(p1) + "\n==============");
-    StdOut.println("tree.nearest(p2): " + tree.nearest(p2) + "\n==============");
-    StdOut.println("tree.nearest(p3): " + tree.nearest(p3) + "\n==============");
-    StdOut.println("tree.nearest(p4): " + tree.nearest(p4) + "\n==============");
-    StdOut.println("tree.nearest(p5): " + tree.nearest(p5) + "\n==============");
+    StdOut.println("tree.nearest(p1): " + tree.nearest(p1));
+    StdOut.println("tree.nearest(p2): " + tree.nearest(p2));
+    StdOut.println("tree.nearest(p3): " + tree.nearest(p3));
+    StdOut.println("tree.nearest(p4): " + tree.nearest(p4));
+    StdOut.println("tree.nearest(p5): " + tree.nearest(p5));
   }
 }
