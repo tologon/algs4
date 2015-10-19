@@ -95,31 +95,37 @@ public class KdTree {
   }
 
   private Point2D nearest(Node node, Point2D closest, Point2D p) {
-    if (closest.distanceSquaredTo(p) > node.r.distanceSquaredTo(p)) {
-      double distanceToPoint = node.p.distanceSquaredTo(p);
-      Point2D cLB = closest;
-      Point2D cRT = closest;
-      if (node.lb != null)
-      { cLB = nearest(node.lb, closest, p); }
-      if (node.rt != null)
-      { cRT = nearest(node.rt, closest, p); }
+    double currentDistance = node.p.distanceSquaredTo(p);
+    double minDistance = closest.distanceSquaredTo(p);
+    Point2D cLB = closest;
+    double lbDistance = minDistance;
+    Point2D cRT = closest;
+    double rtDistance = minDistance;
+    if (node.lb != null
+     && node.lb.r.distanceSquaredTo(p) < minDistance) {
+       cLB = nearest(node.lb, closest, p);
+       lbDistance = cLB.distanceSquaredTo(p);
+     }
+    if (node.rt != null
+     && node.rt.r.distanceSquaredTo(p) < minDistance) {
+       cRT = nearest(node.rt, closest, p);
+       rtDistance = cRT.distanceSquaredTo(p);
+     }
 
-      if (closest.distanceSquaredTo(p) <= cLB.distanceSquaredTo(p)
-       && closest.distanceSquaredTo(p) <= cRT.distanceSquaredTo(p)
-       && closest.distanceSquaredTo(p) <= distanceToPoint)
-      { return closest; }
-      else if (cLB.distanceSquaredTo(p) < closest.distanceSquaredTo(p)
-            && cLB.distanceSquaredTo(p) < cRT.distanceSquaredTo(p)
-            && cLB.distanceSquaredTo(p) < distanceToPoint)
-      { return cLB; }
-      else if (cRT.distanceSquaredTo(p) < closest.distanceSquaredTo(p)
-            && cRT.distanceSquaredTo(p) < cLB.distanceSquaredTo(p)
-            && cRT.distanceSquaredTo(p) < distanceToPoint)
-      { return cRT; }
-      else
-      { return node.p; }
-    } else
+    if (minDistance <= lbDistance
+     && minDistance <= rtDistance
+     && minDistance <= currentDistance)
     { return closest; }
+    else if (lbDistance <= minDistance
+          && lbDistance <= rtDistance
+          && lbDistance <= currentDistance)
+    { return cLB; }
+    else if (rtDistance <= minDistance
+          && rtDistance <= lbDistance
+          && rtDistance <= currentDistance)
+    { return cRT; }
+    else
+    { return node.p; }
   }
 
   private void range(Stack<Point2D> s, Node node, RectHV rect) {
