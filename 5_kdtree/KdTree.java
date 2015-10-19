@@ -88,7 +88,39 @@ public class KdTree {
   }
 
   // a nearest neighbor in the set to point p; null if the set is empty
-  // public Point2D nearest(Point2D p)
+  public Point2D nearest(Point2D p) {
+    if (p == null)    throw new NullPointerException();
+    if (root == null) return null;
+    return nearest(root, root.p, p);
+  }
+
+  private Point2D nearest(Node node, Point2D closest, Point2D p) {
+    if (closest.distanceSquaredTo(p) > node.r.distanceSquaredTo(p)) {
+      double distanceToPoint = node.p.distanceSquaredTo(p);
+      Point2D cLB = closest;
+      Point2D cRT = closest;
+      if (node.lb != null)
+      { cLB = nearest(node.lb, closest, p); }
+      if (node.rt != null)
+      { cRT = nearest(node.rt, closest, p); }
+
+      if (closest.distanceSquaredTo(p) <= cLB.distanceSquaredTo(p)
+       && closest.distanceSquaredTo(p) <= cRT.distanceSquaredTo(p)
+       && closest.distanceSquaredTo(p) <= distanceToPoint)
+      { return closest; }
+      else if (cLB.distanceSquaredTo(p) < closest.distanceSquaredTo(p)
+            && cLB.distanceSquaredTo(p) < cRT.distanceSquaredTo(p)
+            && cLB.distanceSquaredTo(p) < distanceToPoint)
+      { return cLB; }
+      else if (cRT.distanceSquaredTo(p) < closest.distanceSquaredTo(p)
+            && cRT.distanceSquaredTo(p) < cLB.distanceSquaredTo(p)
+            && cRT.distanceSquaredTo(p) < distanceToPoint)
+      { return cRT; }
+      else
+      { return node.p; }
+    } else
+    { return closest; }
+  }
 
   private void range(Stack<Point2D> s, Node node, RectHV rect) {
     if (node != null && rect.intersects(node.r)) {
@@ -235,5 +267,10 @@ public class KdTree {
     { StdOut.println(point); }
     StdDraw.setPenColor(StdDraw.MAGENTA);
     rect.draw();
+    StdOut.println("tree.nearest(p1): " + tree.nearest(p1));
+    StdOut.println("tree.nearest(p2): " + tree.nearest(p2));
+    StdOut.println("tree.nearest(p3): " + tree.nearest(p3));
+    StdOut.println("tree.nearest(p4): " + tree.nearest(p4));
+    StdOut.println("tree.nearest(p5): " + tree.nearest(p5));
   }
 }
