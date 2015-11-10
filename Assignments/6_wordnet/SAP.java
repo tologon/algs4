@@ -1,6 +1,7 @@
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.BreadthFirstDirectedPaths;
+import edu.princeton.cs.algs4.Stack;
 
 public class SAP {
   private static final int INFINITY = Integer.MAX_VALUE;
@@ -57,7 +58,18 @@ public class SAP {
       throw new NullPointerException("vertices v and w cannot be null.");
     }
 
-    return -1;
+    int shortestPath = INFINITY;
+    for (int vertexV : v) {
+      for (int vertexW : w) {
+        int newPath = length(vertexV, vertexW);
+        if (newPath != -1 && newPath < shortestPath) {
+          shortestPath = newPath;
+        }
+      }
+    }
+
+    if (shortestPath != INFINITY)   return shortestPath;
+    else                            return -1;
   }
 
   // a common ancestor that participates
@@ -97,7 +109,14 @@ public class SAP {
     G.addEdge(2, 0);
     StdOut.println("new initial graph:\n" + G);
     SAP sap = new SAP(G);
-    StdOut.println("length of sap: " + sap.length(3, 11));
+    Stack<Integer> vStack = new Stack<>();
+    vStack.push(3);
+    vStack.push(12);
+    Stack<Integer> wStack = new Stack<>();
+    wStack.push(11);
+    wStack.push(2);
+    // StdOut.println("length of sap: " + sap.length(3, 11));
+    StdOut.println("length of sap: " + sap.length(vStack, wStack));
     // StdOut.println("copied graph in SAP:\n" + sap.digraph);
     // G.addEdge(1, 5);
     // StdOut.println("updated initial graph:\n" + G);
