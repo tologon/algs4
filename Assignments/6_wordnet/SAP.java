@@ -29,9 +29,9 @@ public class SAP {
 
     int shortestPath = INFINITY;
     for (int i = 0; i < digraph.V(); i++) {
-      StdOut.println("current i value: " + i);
-      StdOut.println("vPaths.distTo(i): " + vPaths.distTo(i));
-      StdOut.println("wPaths.distTo(i): " + wPaths.distTo(i));
+      // StdOut.println("current i value: " + i);
+      // StdOut.println("vPaths.distTo(i): " + vPaths.distTo(i));
+      // StdOut.println("wPaths.distTo(i): " + wPaths.distTo(i));
 
       if (vPaths.hasPathTo(i) && wPaths.hasPathTo(i)
        && vPaths.distTo(i) + wPaths.distTo(i) < shortestPath) {
@@ -83,16 +83,21 @@ public class SAP {
     //   StdOut.printf("length = %d, ancestor = %d\n", length, ancestor);
     // }
 
-    Digraph G = new Digraph(6);
+    Digraph G = new Digraph(13);
+    G.addEdge(7, 3);
+    G.addEdge(8, 3);
+    G.addEdge(3, 1);
+    G.addEdge(4, 1);
+    G.addEdge(5, 1);
+    G.addEdge(9, 5);
+    G.addEdge(10, 5);
+    G.addEdge(11, 10);
+    G.addEdge(12, 10);
     G.addEdge(1, 0);
-    G.addEdge(1, 2);
-    G.addEdge(2, 3);
-    G.addEdge(3, 4);
-    G.addEdge(4, 5);
-    G.addEdge(5, 0);
+    G.addEdge(2, 0);
     StdOut.println("new initial graph:\n" + G);
     SAP sap = new SAP(G);
-    StdOut.println("length of sap: " + sap.length(1, 5));
+    StdOut.println("length of sap: " + sap.length(3, 11));
     // StdOut.println("copied graph in SAP:\n" + sap.digraph);
     // G.addEdge(1, 5);
     // StdOut.println("updated initial graph:\n" + G);
