@@ -11,12 +11,12 @@ public class WordNet {
 
   // constructor takes the name of the two input files
   public WordNet(String synsets, String hypernyms) {
-    // if (synsets == null || hypernyms == null) {
-    //   throw new NullPointerException("synsets and hypernyms cannot be null.");
-    // }
+    if (synsets == null || hypernyms == null) {
+      throw new NullPointerException("synsets and hypernyms cannot be null.");
+    }
 
     buildSynsets(synsets);
-    // buildDigraph(hypernyms);
+    buildDigraph(hypernyms);
   }
 
   private void buildSynsets(String synsets) {
@@ -48,14 +48,19 @@ public class WordNet {
     synsets = tmp;
   }
 
-  // private void buildDigraph(String hypernyms) {
-  //   digraph = new Digraph(G.V());
-  //   for (int v = 0; v < G.V(); v++) {
-  //     for (int w : G.adj(v)) {
-  //       digraph.addEdge(v, w);
-  //     }
-  //   }
-  // }
+  private void buildDigraph(String hypernyms) {
+    digraph = new Digraph(numOfSynsets);
+    In in = new In(hypernyms);
+
+    StdOut.println("Parsing " + hypernyms);
+    while (!in.isEmpty()) {
+      String line = in.readLine();
+      String[] hypernymData = line.split(",");
+      int synsetID = Integer.parseInt(hypernymData[0]);
+      for (int i = 1; i < hypernymData.length; i++)
+      { digraph.addEdge(synsetID, i); }
+    }
+  }
 
   // // returns all WordNet nouns
   // public Iterable<String> nouns() {
@@ -86,16 +91,16 @@ public class WordNet {
 
   // unit testing
   public static void main(String[] args) {
-    WordNet wn = new WordNet(args[0], null);
+    WordNet wn = new WordNet(args[0], args[1]);
 
-    for (int i = 0; i < 100; i++) {
-      int randomIndex = StdRandom.uniform(0, wn.numOfSynsets);
-      StdOut.println("random synset: " + wn.synsets[randomIndex]);
-    }
+    // for (int i = 0; i < 100; i++) {
+    //   int randomIndex = StdRandom.uniform(0, wn.numOfSynsets);
+    //   StdOut.println("random synset: " + wn.synsets[randomIndex]);
+    // }
     StdOut.println("# of synsets: " + wn.numOfSynsets);
 
-    // StdOut.println("# of vertices in digraph: " + wn.digraph.V());
-    // StdOut.println("# of edges in digraph: " + wn.digraph.E());
+    StdOut.println("# of vertices in digraph: " + wn.digraph.V());
+    StdOut.println("# of edges in digraph: " + wn.digraph.E());
 
     // In in = new In(args[0]);
     // StdOut.println("Parsing " + args[0]);
@@ -107,16 +112,16 @@ public class WordNet {
     //                + "; gloss: " + synsetData[2]);
     // }
     // StdOut.println("==============================");
-    In in = new In(args[1]);
-    StdOut.println("Parsing " + args[1]);
-    while (!in.isEmpty()) {
-      String line = in.readLine();
-      String[] synsetData = line.split(",");
-      StdOut.print("synset id: " + synsetData[0]
-                 + "; hypernyms id(s): ");
-      for (int i = 1; i < synsetData.length - 1; i++)
-      { StdOut.print(synsetData[i] + ", "); }
-      StdOut.println(synsetData[synsetData.length - 1]);
-    }
+    // In in = new In(args[1]);
+    // StdOut.println("Parsing " + args[1]);
+    // while (!in.isEmpty()) {
+    //   String line = in.readLine();
+    //   String[] synsetData = line.split(",");
+    //   StdOut.print("synset id: " + synsetData[0]
+    //              + "; hypernyms id(s): ");
+    //   for (int i = 1; i < synsetData.length - 1; i++)
+    //   { StdOut.print(synsetData[i] + ", "); }
+    //   StdOut.println(synsetData[synsetData.length - 1]);
+    // }
   }
 }
