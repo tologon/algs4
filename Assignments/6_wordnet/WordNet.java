@@ -80,14 +80,18 @@ public class WordNet {
   //   }
   // }
   //
-  // // a synset (second field of synsets.txt)
-  // // that is the common ancestor of nounA and nounB
-  // // in a shortest ancestral path (defined below)
-  // public String sap(String nounA, String nounB) {
-  //   if (nounA == null || nounB == null) {
-  //     throw new NullPointerException("noun A and noun B cannot be null.");
-  //   }
-  // }
+  // a synset (second field of synsets.txt)
+  // that is the common ancestor of nounA and nounB
+  // in a shortest ancestral path (defined below)
+  public String sap(String nounA, String nounB) {
+    if (nounA == null || nounB == null) {
+      throw new NullPointerException("noun A and noun B cannot be null.");
+    }
+
+    SAP sap = new SAP(digraph);
+    // TODO continue from here
+    // int ancestorID = sap.ancestor
+  }
 
   // unit testing
   public static void main(String[] args) {
