@@ -5,6 +5,7 @@ import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.In;
 
 public class WordNet {
+  // TODO switch from array to hashmap
   private String[] synsets;
   private int numOfSynsets;
   private Digraph digraph;
@@ -89,7 +90,8 @@ public class WordNet {
     }
 
     SAP sap = new SAP(digraph);
-    // TODO continue from here
+    // int v = getNounID(nounA);
+    // int w = getNounID(nounB);
     // int ancestorID = sap.ancestor
   }
 
