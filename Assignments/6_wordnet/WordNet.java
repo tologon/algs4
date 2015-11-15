@@ -1,6 +1,7 @@
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.SET;
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.In;
 
@@ -8,6 +9,7 @@ public class WordNet {
   private String[] synsets;
   private int numOfSynsets;
   private Digraph digraph;
+  SAP sap;
 
   // constructor takes the name of the two input files
   public WordNet(String synsets, String hypernyms) {
@@ -17,6 +19,7 @@ public class WordNet {
 
     buildSynsets(synsets);
     buildDigraph(hypernyms);
+    sap = new SAP(digraph);
   }
 
   private void buildSynsets(String synsets) {
@@ -66,24 +69,46 @@ public class WordNet {
     // StdOut.println(digraph);
   }
 
-  // // returns all WordNet nouns
-  // public Iterable<String> nouns() {
-  // }
-  //
-  // // is the word a WordNet noun?
-  // public boolean isNoun(String word) {
-  //   if (word == null) {
-  //     throw new NullPointerException("word cannot be null.");
-  //   }
-  // }
-  //
-  // // distance between nounA and nounB (defined below)
-  // public int distance(String nounA, String nounB) {
-  //   if (nounA == null || nounB == null) {
-  //     throw new NullPointerException("noun A and noun B cannot be null.");
-  //   }
-  // }
-  //
+  // returns all WordNet nouns
+  public Iterable<String> nouns() {
+    SET<String> nouns = new SET<>();
+    int count = 0;
+    for (int i = 0; i < numOfSynsets; i++) {
+      String[] set = synsets[i].split(" ");
+      for (int j = 0; j < set.length; j++) {
+        if (!nouns.contains(set[j])) {
+          nouns.add(set[j]);
+          count++;
+        }
+      }
+    }
+    StdOut.println("# of nouns: " + count);
+    return nouns;
+  }
+
+  // is the word a WordNet noun?
+  public boolean isNoun(String word) {
+    if (word == null) {
+      throw new NullPointerException("word cannot be null.");
+    }
+
+    return getNounID(word) != -1;
+  }
+
+  // distance between nounA and nounB (defined below)
+  public int distance(String nounA, String nounB) {
+    if (nounA == null || nounB == null) {
+      throw new NullPointerException("noun A and noun B cannot be null.");
+    }
+
+    StdOut.println("========================================");
+    int v = getNounID(nounA);
+    int w = getNounID(nounB);
+
+    if (v == -1 || w == -1)   throw new IllegalArgumentException();
+    return sap.length(v, w);
+  }
+
   // a synset (second field of synsets.txt)
   // that is the common ancestor of nounA and nounB
   // in a shortest ancestral path (defined below)
@@ -92,7 +117,6 @@ public class WordNet {
       throw new NullPointerException("noun A and noun B cannot be null.");
     }
 
-    SAP sap = new SAP(digraph);
     StdOut.println("========================================");
     int v = getNounID(nounA);
     int w = getNounID(nounB);
@@ -143,6 +167,7 @@ public class WordNet {
                    + " IS " + wn.sap(nounA, nounB));
     }
 
+    wn.nouns();
 
     // In in = new In(args[0]);
     // StdOut.println("Parsing " + args[0]);
