@@ -5,7 +5,6 @@ import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.In;
 
 public class WordNet {
-  // TODO switch from array to hashmap
   private String[] synsets;
   private int numOfSynsets;
   private Digraph digraph;
@@ -58,9 +57,13 @@ public class WordNet {
       String line = in.readLine();
       String[] hypernymData = line.split(",");
       int synsetID = Integer.parseInt(hypernymData[0]);
-      for (int i = 1; i < hypernymData.length; i++)
-      { digraph.addEdge(synsetID, i); }
+      for (int i = 1; i < hypernymData.length; i++) {
+        int hypernymID = Integer.parseInt(hypernymData[i]);
+        digraph.addEdge(synsetID, hypernymID);
+      }
     }
+
+    // StdOut.println(digraph);
   }
 
   // // returns all WordNet nouns
@@ -90,9 +93,33 @@ public class WordNet {
     }
 
     SAP sap = new SAP(digraph);
-    // int v = getNounID(nounA);
-    // int w = getNounID(nounB);
-    // int ancestorID = sap.ancestor
+    StdOut.println("========================================");
+    int v = getNounID(nounA);
+    int w = getNounID(nounB);
+
+    if (v == -1 || w == -1)   throw new IllegalArgumentException();
+    int ancestorID = sap.ancestor(v, w);
+    // StdOut.println("ancestorID: " + ancestorID);
+    return synsets[ancestorID];
+  }
+
+  private int getNounID(String noun) {
+    StdOut.println("search for index of " + noun);
+    int min = 0;
+    int max = numOfSynsets - 1;
+    while (min <= max) {
+      int mid = min + (max - min) / 2;
+      if (synsets[mid].contains(noun)) {
+        return mid;
+      }
+      else if (synsets[mid].compareTo(noun) > 0) {
+        max = mid - 1;
+      }
+      else {
+        min = mid + 1;
+      }
+    }
+    return -1;
   }
 
   // unit testing
@@ -107,6 +134,15 @@ public class WordNet {
 
     StdOut.println("# of vertices in digraph: " + wn.digraph.V());
     StdOut.println("# of edges in digraph: " + wn.digraph.E());
+
+    for (int i = 0; i < 10; i++) {
+      String nounA = wn.synsets[StdRandom.uniform(0, wn.numOfSynsets)];
+      String nounB = wn.synsets[StdRandom.uniform(0, wn.numOfSynsets)];
+      StdOut.println("SAP FOR "
+                   + nounA + " AND " + nounB
+                   + " IS " + wn.sap(nounA, nounB));
+    }
+
 
     // In in = new In(args[0]);
     // StdOut.println("Parsing " + args[0]);
