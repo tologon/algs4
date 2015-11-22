@@ -1,3 +1,7 @@
+import edu.princeton.cs.algs4.Picture;
+import edu.princeton.cs.algs4.StdOut;
+import java.awt.Color;
+
 public class SeamCarver {
   private Picture picture;
 
@@ -25,12 +29,13 @@ public class SeamCarver {
     if (x < 0 || x >= width() || y < 0 || y >= height())
     { throw new IndexOutOfBoundsException("x and/or y are outside of range"); }
     // account for border pixels
-    if (x == 0 || y == 0 || x == width() || y == height())
-    { return 1000.0; }
+
+    if (x == 0 || y == 0 || x == width() - 1 || y == height() - 1)
+    { return 1000.00; }
 
     double xGradient = calculateGradient(x + 1, y, x - 1, y);
     double yGradient = calculateGradient(x, y + 1, x, y - 1);
-    double energy = Math.sqrt(xGradient + yGradient);
+    double energy = Math.round(Math.sqrt(xGradient + yGradient));
     return energy;
   }
 
@@ -45,9 +50,9 @@ public class SeamCarver {
     int green2    = color2.getGreen();
     int blue2     = color2.getBlue();
 
-    double redDelta   = (double)red1 - red2;
-    double greenDelta = (double)green1 - green2;
-    double blueDelta  = (double)blue1 - blue2;
+    double redDelta   = (red2 - red1) * 1.00;
+    double greenDelta = (green2 - green1) * 1.00;
+    double blueDelta  = (blue2 - blue1) * 1.00;
     return (squareOf(redDelta) + squareOf(greenDelta) + squareOf(blueDelta));
   }
 
