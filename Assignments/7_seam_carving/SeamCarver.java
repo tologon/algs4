@@ -26,7 +26,7 @@ public class SeamCarver {
 
   // energy of pixel at column x and row y
   public double energy(int x, int y) {
-    if (x < 0 || x >= width() || y < 0 || y >= height())
+    if (!valid(x, y))
     { throw new IndexOutOfBoundsException("x and/or y are outside of range"); }
     // account for border pixels
 
@@ -38,6 +38,9 @@ public class SeamCarver {
     double energy = Math.round(Math.sqrt(xGradient + yGradient));
     return energy;
   }
+
+  private boolean valid(int x, int y)
+  { return !(x < 0 || x >= width() || y < 0 || y >= height()); }
 
   private double calculateGradient(int x1, int y1, int x2, int y2) {
     Color color1  = picture.get(x1, y1);
@@ -79,9 +82,12 @@ public class SeamCarver {
     seam[1] = x;
 
     int count = 2;
-    while (count <= seam.length) {
-      
+    while (count < seam.length) {
+      seam[count] = findLowEnergy(x, count);
+      x = seam[count];
+      count++;
     }
+    return seam;
   }
 
   private int findStartX(double[][] energies) {
@@ -95,6 +101,23 @@ public class SeamCarver {
       }
     }
     return startX;
+  }
+
+  private int findLowEnergy(int x, int y) {
+    int lowIndex = -1;
+    double lowNum = 1001.00;
+    if (valid(x - 1, y) && energy(x - 1, y) < lowNum) {
+      lowIndex = x - 1;
+      lowNum = energy(x - 1, y);
+    }
+    if (valid(x, y) && energy(x, y) < lowNum) {
+      lowIndex = x;
+      lowNum = energy(x, y);
+    }
+    if (valid(x + 1, y) && energy(x + 1, y) < lowNum) {
+      lowIndex = x + 1;
+    }
+    return lowIndex;
   }
 
   // remove horizontal seam from current picture
