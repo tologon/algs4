@@ -67,7 +67,34 @@ public class SeamCarver {
 
   // sequence of indices for vertical seam
   public int[] findVerticalSeam() {
-    return null;
+    double[][] energies = new double[width()][height()];
+    for (int x = 0; x < energies.length; x++) {
+      for (int y = 0; y < energies[0].length; y++)
+      { energies[x][y] = energy(x, y); }
+    }
+
+    int[] seam = new int[height()];
+    int x = findStartX(energies);
+    seam[0] = x;
+    seam[1] = x;
+
+    int count = 2;
+    while (count <= seam.length) {
+      
+    }
+  }
+
+  private int findStartX(double[][] energies) {
+    // finding vertex w/ lowest energy to start search from
+    int startX = 0;
+    double lowest = 1001.00;
+    for (int i = 0; i < energies.length; i++) {
+      if (energies[i][1] < lowest) {
+        lowest = energies[i][1];
+        startX = i;
+      }
+    }
+    return startX;
   }
 
   // remove horizontal seam from current picture
