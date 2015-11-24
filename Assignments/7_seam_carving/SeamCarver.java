@@ -65,7 +65,24 @@ public class SeamCarver {
 
   // sequence of indices for horizontal seam
   public int[] findHorizontalSeam() {
-    return null;
+    double[][] energies = new double[height()][width()];
+    for (int y = 0; y < energies.length; y++) {
+      for (int x = 0; x < energies[0].length; x++)
+      { energies[y][x] = energy(x, y); }
+    }
+
+    int[] seam = new int[width()];
+    int x = findStartX(energies);
+    seam[0] = x;
+    seam[1] = x;
+
+    int count = 2;
+    while (count < seam.length) {
+      seam[count] = findLowEnergy(x, count);
+      x = seam[count];
+      count++;
+    }
+    return seam;
   }
 
   // sequence of indices for vertical seam
