@@ -4,12 +4,14 @@ import java.awt.Color;
 
 public class SeamCarver {
   private Picture picture;
+  private boolean verticalSeam;
 
   // create a seam carver object based on the given picture
   public SeamCarver(Picture picture) {
     if (picture == null)  throw new NullPointerException();
 
     this.picture = new Picture(picture);
+    verticalSeam = true;
   }
 
   // current picture
@@ -87,11 +89,35 @@ public class SeamCarver {
 
   // sequence of indices for vertical seam
   public int[] findVerticalSeam() {
-    double[][] energies = new double[width()][height()];
-    for (int x = 0; x < energies.length; x++) {
-      for (int y = 0; y < energies[0].length; y++)
-      { energies[x][y] = energy(x, y); }
+    int width, height;
+    if (verticalSeam) {
+      width = width();
+      height = height();
+    } else {
+      width = height();
+      height = width();
     }
+    double[][] energies = new double[width][height];
+
+    if (verticalSeam) {
+      for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++)
+        { energies[x][y] = energy(x, y); }
+      }
+    } else {
+      for (int y = 0; y < width; y++) {
+        for (int x = 0; x < height; x++)
+        { energies[y][x] = energy(x, y); }
+      }
+    }
+
+    // TODO re-do, according to the instructions below:
+    int[] bestSeam;
+    double lowestTotalEnergy = 1000.00 * height;
+    // (starting at 0th top-row seam) for every 4th seam on top
+    // get a complete path + total energy
+    // if total energy for current seam is the smallest
+    //    store that seam as best one (smallest total energy)
 
     int[] seam = new int[height()];
     int x = findStartX(energies);
