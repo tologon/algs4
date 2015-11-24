@@ -28,6 +28,7 @@ public class SeamCarver {
 
   // energy of pixel at column x and row y
   public double energy(int x, int y) {
+    // TODO re-do (use code from valid() method)
     if (!valid(x, y))
     { throw new IndexOutOfBoundsException("x and/or y are outside of range"); }
     // account for border pixels
@@ -41,6 +42,7 @@ public class SeamCarver {
     return energy;
   }
 
+  // TODO re-do (get rid of this method)
   private boolean valid(int x, int y)
   { return !(x < 0 || x >= width() || y < 0 || y >= height()); }
 
@@ -86,47 +88,61 @@ public class SeamCarver {
     double[][] energies = new double[width][height];
 
     if (verticalSeam) {
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++)
+      for (int x = 0; x < energies.length; x++) {
+        for (int y = 0; y < energies[0].length; y++)
         { energies[x][y] = energy(x, y); }
       }
     } else {
-      for (int y = 0; y < width; y++) {
-        for (int x = 0; x < height; x++)
+      for (int x = 0; x < energies[0].length; x++) {
+        for (int y = 0; y < energies.length; y++)
         { energies[y][x] = energy(x, y); }
       }
     }
 
-    int[] bestSeam = null;
-    int[] seam;
-    double lowestTotalEnergy = 1001.00 * height;
-    for (int i = 0; i < width; i++) {
-      // get a complete path of a seam
-      seam = new int[height];
-      seam[0] = i;
-      for (int y = 1, x = i; y < seam.length; y++) {
-        seam[y] = findLowEnergy(x, y);
-        x = seam[y];
-      }
+    printEnergies(energies);
 
-      // get total energy of a seam
-      double totalEnergy = 0.00;
-      if (verticalSeam) {
-        for (int j = 0; j < seam.length; j++)
-        { totalEnergy += energy(seam[j], j); }
-      } else {
-        for (int j = 0; j < seam.length; j++)
-        { StdOut.println("x: " + seam[j] + ", y: " + j);
-          totalEnergy += energy(j, seam[j]); }
-        StdOut.println("=====================");
-      }
-      if (totalEnergy < lowestTotalEnergy) {
-        lowestTotalEnergy = totalEnergy;
-        bestSeam = seam;
-      }
-    }
+    int[] bestSeam = new int[height];
+    // int[] seam;
+    // double lowestTotalEnergy = 1001.00 * height;
+    // for (int i = 0; i < width; i++) {
+    //   // get a complete path of a seam
+    //   seam = new int[height];
+    //   seam[0] = i;
+    //   for (int y = 1, x = i; y < seam.length; y++) {
+    //     seam[y] = findLowEnergy(x, y);
+    //     x = seam[y];
+    //   }
+    //
+    //   // get total energy of a seam
+    //   double totalEnergy = 0.00;
+    //   if (verticalSeam) {
+    //     for (int j = 0; j < seam.length; j++)
+    //     { totalEnergy += energy(seam[j], j); }
+    //   } else {
+    //     for (int j = 0; j < seam.length; j++)
+    //     { StdOut.println("x: " + seam[j] + ", y: " + j);
+    //       totalEnergy += energy(j, seam[j]); }
+    //     StdOut.println("=====================");
+    //   }
+    //   if (totalEnergy < lowestTotalEnergy) {
+    //     lowestTotalEnergy = totalEnergy;
+    //     bestSeam = seam;
+    //   }
+    // }
 
     return bestSeam;
+  }
+
+  private void printEnergies(double[][] energies) {
+    StdOut.println("\n============== Printing newly created 2d array ================");
+    StdOut.println("energies.length: " + energies.length);
+    StdOut.println("energies[0].length: " + energies[0].length);
+    for (int i = 0; i < energies[0].length; i++) {
+      for (int j = 0; j < energies.length; j++)
+      { StdOut.print(energies[j][i] + " "); }
+      StdOut.println();
+    }
+    StdOut.println("============== End of newly created 2d array ================");
   }
 
   private int findLowEnergy(int x, int y) {
