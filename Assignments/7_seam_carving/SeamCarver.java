@@ -37,7 +37,7 @@ public class SeamCarver {
 
     double xGradient = calculateGradient(x + 1, y, x - 1, y);
     double yGradient = calculateGradient(x, y + 1, x, y - 1);
-    double energy = Math.round(Math.sqrt(xGradient + yGradient));
+    double energy = Math.sqrt(xGradient + yGradient);
     return energy;
   }
 
@@ -67,23 +67,9 @@ public class SeamCarver {
 
   // sequence of indices for horizontal seam
   public int[] findHorizontalSeam() {
-    double[][] energies = new double[height()][width()];
-    for (int y = 0; y < energies.length; y++) {
-      for (int x = 0; x < energies[0].length; x++)
-      { energies[y][x] = energy(x, y); }
-    }
-
-    int[] seam = new int[width()];
-    int x = findStartX(energies);
-    seam[0] = x;
-    seam[1] = x;
-
-    int count = 2;
-    while (count < seam.length) {
-      seam[count] = findLowEnergy(x, count);
-      x = seam[count];
-      count++;
-    }
+    verticalSeam = false;
+    int[] seam = findVerticalSeam();
+    verticalSeam = true;
     return seam;
   }
 
@@ -111,54 +97,62 @@ public class SeamCarver {
       }
     }
 
-    // TODO re-do, according to the instructions below:
-    int[] bestSeam;
-    double lowestTotalEnergy = 1000.00 * height;
-    // (starting at 0th top-row seam) for every 4th seam on top
-    // get a complete path + total energy
-    // if total energy for current seam is the smallest
-    //    store that seam as best one (smallest total energy)
+    int[] bestSeam = null;
+    int[] seam;
+    double lowestTotalEnergy = 1001.00 * height;
+    for (int i = 0; i < width; i++) {
+      // get a complete path of a seam
+      seam = new int[height];
+      seam[0] = i;
+      for (int y = 1, x = i; y < seam.length; y++) {
+        seam[y] = findLowEnergy(x, y);
+        x = seam[y];
+      }
 
-    int[] seam = new int[height()];
-    int x = findStartX(energies);
-    seam[0] = x;
-    seam[1] = x;
-
-    int count = 2;
-    while (count < seam.length) {
-      seam[count] = findLowEnergy(x, count);
-      x = seam[count];
-      count++;
-    }
-    return seam;
-  }
-
-  private int findStartX(double[][] energies) {
-    // finding vertex w/ lowest energy to start search from
-    int startX = 0;
-    double lowest = 1001.00;
-    for (int i = 0; i < energies.length; i++) {
-      if (energies[i][1] < lowest) {
-        lowest = energies[i][1];
-        startX = i;
+      // get total energy of a seam
+      double totalEnergy = 0.00;
+      if (verticalSeam) {
+        for (int j = 0; j < seam.length; j++)
+        { totalEnergy += energy(seam[j], j); }
+      } else {
+        for (int j = 0; j < seam.length; j++)
+        { StdOut.println("x: " + seam[j] + ", y: " + j);
+          totalEnergy += energy(j, seam[j]); }
+        StdOut.println("=====================");
+      }
+      if (totalEnergy < lowestTotalEnergy) {
+        lowestTotalEnergy = totalEnergy;
+        bestSeam = seam;
       }
     }
-    return startX;
+
+    return bestSeam;
   }
 
   private int findLowEnergy(int x, int y) {
     int lowIndex = -1;
     double lowNum = 1001.00;
-    if (valid(x - 1, y) && energy(x - 1, y) < lowNum) {
+    if (valid(x - 1, y))
+    { StdOut.println("energy(x - 1, y): " + energy(x - 1, y)); }
+    if (valid(x, y))
+    { StdOut.println("energy(x, y): " + energy(x, y)); }
+    if (valid(x + 1, y))
+    { StdOut.println("energy(x + 1, y): " + energy(x + 1, y)); }
+
+    if (valid(x - 1, y) && energy(x - 1, y) <= lowNum) {
       lowIndex = x - 1;
       lowNum = energy(x - 1, y);
     }
-    if (valid(x, y) && energy(x, y) < lowNum) {
+    if (valid(x, y) && energy(x, y) <= lowNum) {
       lowIndex = x;
       lowNum = energy(x, y);
     }
-    if (valid(x + 1, y) && energy(x + 1, y) < lowNum) {
+    if (valid(x + 1, y) && energy(x + 1, y) <= lowNum) {
       lowIndex = x + 1;
+    }
+    if (lowIndex == -1) {
+      StdOut.print("ALERT!!!!!! WRONG X OR Y\t");
+      StdOut.println("x: " + x + ", y: " + y);
     }
     return lowIndex;
   }
