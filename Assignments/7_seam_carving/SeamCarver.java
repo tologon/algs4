@@ -206,5 +206,59 @@ public class SeamCarver {
     if (seam == null)   throw new NullPointerException("seam cannot be null.");
     if (width() <= 1)             throw new IllegalArgumentException();
     if (seam.length != height())  throw new IllegalArgumentException();
+
+    printEnergies();
+    StdOut.print("PRINTING SEAM: { ");
+    for (int i = 0; i < seam.length; i++)
+    { StdOut.print(seam[i] + " "); }
+    StdOut.println("}");
+
+    int newWidth = energies.length - 1;
+    int height = energies[0].length;
+    double[][] newEnergies = new double[newWidth][height];
+
+    for (int y = 0; y < newEnergies[0].length; y++) {
+      for (int x = 0; x < newEnergies.length; x++) {
+        if (seam[y] == x) {
+          if (x + 1 < energies.length) {
+            newEnergies[x][y] = energies[x + 1][y];
+            x++;
+            for ( ; x + 1 < energies.length; x++)
+            { newEnergies[x][y] = energies[x + 1][y]; }
+          } else {
+            newEnergies[x][y] = 1000.00;
+          }
+        } else {
+          newEnergies[x][y] = energies[x][y];
+        }
+      }
+    }
+
+    // for (int x = 0; x < newEnergies.length; x++, i++) {
+    //   for (int y = 0; y < newEnergies[0].length; y++) {
+    //     if (seam[i] == x) {
+    //       StdOut.println("i: " + i + ", x: " + x + ", y: " + y);
+    //       if (x + 1 < energies.length) {
+    //         newEnergies[x][y] = energies[x + 1][y];
+    //       } else {
+    //         newEnergies[x][y] = 1000.00;
+    //       }
+    //     } else {
+    //       newEnergies[x][y] = energies[x][y];
+    //     }
+    //   }
+    // }
+
+    energies = newEnergies;
+    printEnergies();
+
+    // makePicture();
+  }
+
+  private void makePicture() {
+    Picture newPicture = new Picture(energies.length, energies[0].length);
+    for (int x = 0; x < energies.length; x++) {
+      for (int y = 0; y < energies[0].length; y++) {}
+    }
   }
 }
