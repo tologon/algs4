@@ -145,16 +145,11 @@ public class SeamCarver {
     StdOut.println("============== End of newly created 2d array ================");
   }
 
+  // TODO use new 2d array of energies instead of actual picture
   private int findLowEnergy(int x, int y) {
     int lowIndex = -1;
     double lowNum = 1001.00;
-    if (valid(x - 1, y))
-    { StdOut.println("energy(x - 1, y): " + energy(x - 1, y)); }
-    if (valid(x, y))
-    { StdOut.println("energy(x, y): " + energy(x, y)); }
-    if (valid(x + 1, y))
-    { StdOut.println("energy(x + 1, y): " + energy(x + 1, y)); }
-
+    // TODO use custom valid method
     if (valid(x - 1, y) && energy(x - 1, y) <= lowNum) {
       lowIndex = x - 1;
       lowNum = energy(x - 1, y);
