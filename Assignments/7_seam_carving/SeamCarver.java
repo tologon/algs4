@@ -48,7 +48,7 @@ public class SeamCarver {
     { throw new IndexOutOfBoundsException("x and/or y outside of the range."); }
 
     // if value is already calculated, return it
-    if (energies[x][y] != 0)        return energies[x][y];
+    if (energies[x][y] != 0.00)     return energies[x][y];
     // if value is NOT calculated and its borded pixel, return value for border
     else if (isBorderPixel(x, y))   return 1000.00;
     // if value is NOT calculated, calculate energy using the formula
@@ -117,7 +117,66 @@ public class SeamCarver {
 
   // sequence of indices for vertical seam
   public int[] findVerticalSeam() {
-    return null;
+    double smallestTotalEnergy = 1001.00 * height();
+    int[] bestSeam = new int[height()];
+
+    // for every column in matrix
+    for (int x = 0; x < width(); x++) {
+      int[] seam = new int[height()];
+      seam[0] = x;
+
+      int customX = x;
+      // TODO re-do to use algorithm w/ topological order
+      // instead of the current lazy approach (which will cost points)
+      // find shortest path from top to bottom
+      for (int y = 1; y < height(); y++) {
+        seam[y] = indexOfMinEnergy(customX, y);
+        customX = seam[y];
+      }
+      double totalEnergyOfSeam = totalEnergy(seam);
+
+      // printSeam(seam);
+
+      // if its total energy is less than smallest seam's total energy
+      if (totalEnergyOfSeam < smallestTotalEnergy) {
+        // assign current seam as smallest one
+        smallestTotalEnergy = totalEnergyOfSeam;
+        bestSeam = seam;
+      }
+    }
+
+    return bestSeam;
+  }
+
+  private int indexOfMinEnergy(int x, int y) {
+    int bestIndex = -1;
+    double lowestEnergy = 1001.00;
+    if (isValid(x - 1, y) && energy(x - 1, y) < lowestEnergy) {
+      bestIndex = x - 1;
+      lowestEnergy = energy(x - 1, y);
+    }
+    if (isValid(x, y) && energy(x, y) < lowestEnergy) {
+      bestIndex = x;
+      lowestEnergy = energy(x, y);
+    }
+    if (isValid(x + 1, y) && energy(x + 1, y) < lowestEnergy) {
+      bestIndex = x + 1;
+      lowestEnergy = energy(x + 1, y);
+    }
+
+    if (bestIndex == -1)    return x;
+    else                    return bestIndex;
+  }
+
+  private double totalEnergy(int[] seam) {
+    double total = 0.00;
+    for (int i = 0; i < seam.length; i++)
+    { total += seam[i]; }
+    return total;
+  }
+
+  private boolean isValid(int x, int y) {
+    return (x >= 0 && x < width() && y >= 0 && y < height());
   }
 
   // remove horizontal seam from current picture
@@ -138,7 +197,7 @@ public class SeamCarver {
 
   }
 
-  // use for debugging
+  // use for debugging energy matrix
   private void printEnergies(double[][] energies) {
     StdOut.println("\n##### Printing energies #####");
     for (int y = 0; y < energies[0].length; y++) {
@@ -147,5 +206,13 @@ public class SeamCarver {
       StdOut.println();
     }
     StdOut.println("\n##### End of energies #####");
+  }
+
+  // use for debugging seam(s)
+  private void printSeam(int[] seam) {
+    StdOut.print("\n##### Printing seam #####\n{ ");
+    for (int i = 0; i < seam.length; i++)
+    { StdOut.print(seam[i] + " "); }
+    StdOut.println("}\n##### End of seam #####");
   }
 }
