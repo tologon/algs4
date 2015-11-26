@@ -13,38 +13,18 @@ public class SeamCarver {
     this.picture = new Picture(picture);
     energies = new double[width()][height()];
     calculateEnergies();
-    printEnergies(energies);
+    // printEnergies(energies);
   }
 
   private void calculateEnergies() {
-    // for every row
+    // for every row/height/y
     for (int y = 0; y < height(); y++) {
-      // for every column
+      // for every column/width/x
       for (int x = 0; x < width(); x++) {
-        // if its a border pixel, give it energy of 1000.00
-        if (isBorderPixel(x, y))
-        { energies[x][y] = 1000.00; }
-        // else calculate its energy using formula
-        else
-        { energies[x][y] = energy(x, y); }
+        // calculate its energy using formula
+        energies[x][y] = energy(x, y);
       }
     }
-  }
-
-  private boolean isBorderPixel(int x, int y) {
-    return ((x >= 0 && y == 0) || (x >= 0 && y == height() - 1)
-         || (x == 0 && y >= 0) || (x == width() - 1 && y >= 0));
-  }
-
-  // use for debugging
-  private void printEnergies(double[][] energies) {
-    StdOut.println("\n##### Printing energies #####");
-    for (int y = 0; y < energies[0].length; y++) {
-      for (int x = 0; x < energies.length; x++)
-      { StdOut.print(energies[x][y] + " "); }
-      StdOut.println();
-    }
-    StdOut.println("\n##### End of energies #####");
   }
 
   // current picture
@@ -66,7 +46,68 @@ public class SeamCarver {
   public double energy(int x, int y) {
     if (x < 0 || x >= width() || y < 0 || y >= height())
     { throw new IndexOutOfBoundsException("x and/or y outside of the range."); }
-    return 0.00;
+
+    // if value is already calculated, return it
+    if (energies[x][y] != 0)        return energies[x][y];
+    // if value is NOT calculated and its borded pixel, return value for border
+    else if (isBorderPixel(x, y))   return 1000.00;
+    // if value is NOT calculated, calculate energy using the formula
+    else                            return energyOf(x, y);
+  }
+
+  private boolean isBorderPixel(int x, int y) {
+    return ((x >= 0 && y == 0) || (x >= 0 && y == height() - 1)
+         || (x == 0 && y >= 0) || (x == width() - 1 && y >= 0));
+  }
+
+  private double energyOf(int x, int y) {
+    double deltaX = calculateDeltaX(x, y);
+    double deltaY = calculateDeltaY(x, y);
+    return Math.sqrt(deltaX + deltaY);
+  }
+
+  private double calculateDeltaX(int x, int y) {
+    Color color1        = picture.get(x - 1, y);
+    int red1            = color1.getRed();
+    int green1          = color1.getGreen();
+    int blue1           = color1.getBlue();
+
+    Color color2        = picture.get(x + 1, y);
+    int red2            = color2.getRed();
+    int green2          = color2.getGreen();
+    int blue2           = color2.getBlue();
+
+    double deltaRed     = red2 - red1 * 1.00;
+    double deltaGreen   = green2 - green1 * 1.00;
+    double deltaBlue    = blue2 - blue1 * 1.00;
+
+    return deltaSquaredOf(deltaRed, deltaGreen, deltaBlue);
+  }
+
+  private double calculateDeltaY(int x, int y) {
+    Color color1      = picture.get(x, y - 1);
+    int red1          = color1.getRed();
+    int green1        = color1.getGreen();
+    int blue1         = color1.getBlue();
+
+    Color color2      = picture.get(x, y + 1);
+    int red2          = color2.getRed();
+    int green2        = color2.getGreen();
+    int blue2         = color2.getBlue();
+
+    double deltaRed      = red2 - red1 * 1.00;
+    double deltaGreen    = green2 - green1 * 1.00;
+    double deltaBlue     = blue2 - blue1 * 1.00;
+
+    return deltaSquaredOf(deltaRed, deltaGreen, deltaBlue);
+  }
+
+  private double deltaSquaredOf(double delta1, double delta2, double delta3) {
+    double squaredDelta = 0.00;
+    squaredDelta += Math.pow(delta1, 2);
+    squaredDelta += Math.pow(delta2, 2);
+    squaredDelta += Math.pow(delta3, 2);
+    return squaredDelta;
   }
 
   // sequence of indices for horizontal seam
@@ -95,5 +136,16 @@ public class SeamCarver {
     if (width() <= 1)  throw new IllegalArgumentException("nothing to remove");
     // TODO add check for invalid seam, throw IllegalArgumentException
 
+  }
+
+  // use for debugging
+  private void printEnergies(double[][] energies) {
+    StdOut.println("\n##### Printing energies #####");
+    for (int y = 0; y < energies[0].length; y++) {
+      for (int x = 0; x < energies.length; x++)
+      { StdOut.print(energies[x][y] + "\t"); }
+      StdOut.println();
+    }
+    StdOut.println("\n##### End of energies #####");
   }
 }
