@@ -12,7 +12,7 @@ public class SeamCarver {
     if (picture == null)  throw new NullPointerException("picture cannot be null");
 
     this.picture = new Picture(picture);
-    energies = new double[width()][height()];
+    energies = new double[picture.width()][picture.height()];
     calculateEnergies();
     verticalSeam = true;
     // printEnergies(energies);
@@ -36,12 +36,12 @@ public class SeamCarver {
 
   // width of current picture
   public int width() {
-    return picture.width();
+    return energies.length;
   }
 
   // height of current picture
   public int height() {
-    return picture.height();
+    return energies[0].length;
   }
 
   // energy of pixel at column x and row y
@@ -151,6 +151,8 @@ public class SeamCarver {
       double totalEnergyOfSeam = totalEnergy(seam);
 
       // printSeam(seam);
+      // StdOut.print("total energy: " + totalEnergyOfSeam + "; ");
+      // StdOut.println("best energy: " + smallestTotalEnergy);
 
       // if its total energy is less than smallest seam's total energy
       if (totalEnergyOfSeam < smallestTotalEnergy) {
@@ -192,8 +194,17 @@ public class SeamCarver {
 
   private double totalEnergy(int[] seam) {
     double total = 0.00;
-    for (int i = 0; i < seam.length; i++)
-    { total += seam[i]; }
+    if (verticalSeam) {
+      for (int y = 0; y < seam.length; y++) {
+        int x = seam[y];
+        total += energies[x][y];
+      }
+    } else {
+      for (int y = 0; y < seam.length; y++) {
+        int x = seam[y];
+        total += energies[y][x];
+      }
+    }
     return total;
   }
 
@@ -211,7 +222,7 @@ public class SeamCarver {
     if (seam == null)   throw new NullPointerException("h-seam cannot be null");
     if (seam.length != width()) throw new IllegalArgumentException();
     if (height() <= 1)  throw new IllegalArgumentException("nothing to remove");
-    // TODO add check for invalid seam, throw IllegalArgumentException
+    // TODO add check for invalid seam pixels, throw IllegalArgumentException
 
   }
 
@@ -220,8 +231,41 @@ public class SeamCarver {
     if (seam == null)   throw new NullPointerException("v-seam cannot be null");
     if (seam.length != height()) throw new IllegalArgumentException();
     if (width() <= 1)  throw new IllegalArgumentException("nothing to remove");
-    // TODO add check for invalid seam, throw IllegalArgumentException
 
+    double[][] newEnergies = new double[width() - 1][height()];
+    int x;
+    for (int y = 0; y < seam.length; y++) {
+      x = seam[y];
+      if (!isValid(x, y))
+      { throw new IllegalArgumentException("pixel is outside of prescribed range."); }
+
+      double[] originalRow = getRow(energies, energies.length, y);
+      double[] newRow = new double[newEnergies.length];
+
+      // copy elements just before "deleted" seam pixel
+      System.arraycopy(originalRow, 0, newRow, 0, x);
+      // copy elements just after "deleted" seam pixel
+      System.arraycopy(originalRow, x + 1, newRow, x, width() - x - 1);
+
+      assignRow(newEnergies, newEnergies.length, y, newRow);
+    }
+
+    printEnergies(energies);
+    printSeam(seam);
+    energies = newEnergies;
+    printEnergies(energies);
+  }
+
+  private double[] getRow(double[][] energies, int width, int y) {
+    double[] row = new double[width];
+    for (int x = 0; x < width; x++)
+    { row[x] = energies[x][y]; }
+    return row;
+  }
+
+  private void assignRow(double[][] energies, int width, int y, double[] row) {
+    for (int x = 0; x < width; x++)
+    { energies[x][y] = row[x]; }
   }
 
   // use for debugging energy matrix
