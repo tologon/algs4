@@ -3,7 +3,6 @@ import edu.princeton.cs.algs4.StdOut;
 import java.awt.Color;
 
 public class SeamCarver {
-  private double[][] energies;
   private Color[][] colors;
   private boolean verticalSeam;
 
@@ -11,25 +10,11 @@ public class SeamCarver {
   public SeamCarver(Picture picture) {
     if (picture == null)  throw new NullPointerException("picture cannot be null");
 
-    energies = new double[picture.width()][picture.height()];
     colors = new Color[picture.width()][picture.height()];
 
     storeColors(picture);
-    calculateEnergies();
     verticalSeam = true;
     // printEnergies(energies);
-  }
-
-  // storing energies of every pixel
-  private void calculateEnergies() {
-    // for every row/height/y
-    for (int y = 0; y < height(); y++) {
-      // for every column/width/x
-      for (int x = 0; x < width(); x++) {
-        // calculate its energy using formula
-        energies[x][y] = energy(x, y);
-      }
-    }
   }
 
   // storing colors of every pixel
@@ -54,12 +39,12 @@ public class SeamCarver {
 
   // width of current picture
   public int width() {
-    return energies.length;
+    return colors.length;
   }
 
   // height of current picture
   public int height() {
-    return energies[0].length;
+    return colors[0].length;
   }
 
   // energy of pixel at column x and row y
@@ -67,8 +52,6 @@ public class SeamCarver {
     if (x < 0 || x >= width() || y < 0 || y >= height())
     { throw new IndexOutOfBoundsException("x and/or y outside of the range."); }
 
-    // if value is already calculated, return it
-    if (energies[x][y] != 0.00)     return energies[x][y];
     // if value is NOT calculated and its borded pixel, return value for border
     else if (isBorderPixel(x, y))   return 1000.00;
     // if value is NOT calculated, calculate energy using the formula
@@ -150,6 +133,9 @@ public class SeamCarver {
       height = width();
     }
 
+    double[][] energies = new double[width()][height()];
+    populateEnergies(energies);
+
     double smallestTotalEnergy = 1001.00 * height;
     int[] bestSeam = new int[height];
 
@@ -163,10 +149,10 @@ public class SeamCarver {
       // instead of the current lazy approach (which will cost points)
       // find shortest path from top to bottom
       for (int y = 1; y < height; y++) {
-        seam[y] = indexOfMinEnergy(customX, y);
+        seam[y] = indexOfMinEnergy(energies, customX, y);
         customX = seam[y];
       }
-      double totalEnergyOfSeam = totalEnergy(seam);
+      double totalEnergyOfSeam = totalEnergy(energies, seam);
 
       // printSeam(seam);
       // StdOut.print("total energy: " + totalEnergyOfSeam + "; ");
@@ -183,34 +169,45 @@ public class SeamCarver {
     return bestSeam;
   }
 
-  private int indexOfMinEnergy(int x, int y) {
+  private void populateEnergies(double[][] energies) {
+    // for every row/height/y
+    for (int y = 0; y < height(); y++) {
+      // for every column/width/x
+      for (int x = 0; x < width(); x++) {
+        // calculate its energy using formula
+        energies[x][y] = energy(x, y);
+      }
+    }
+  }
+
+  private int indexOfMinEnergy(double[][] energies, int x, int y) {
     int bestIndex = -1;
     double lowestEnergy = 1001.00;
-    if (isValid(x - 1, y) && customEnergy(x - 1, y) < lowestEnergy) {
+    if (isValid(x - 1, y) && customEnergy(energies, x - 1, y) < lowestEnergy) {
       bestIndex = x - 1;
-      lowestEnergy = customEnergy(x - 1, y);
+      lowestEnergy = customEnergy(energies, x - 1, y);
     }
-    if (isValid(x, y) && customEnergy(x, y) < lowestEnergy) {
+    if (isValid(x, y) && customEnergy(energies, x, y) < lowestEnergy) {
       bestIndex = x;
-      lowestEnergy = customEnergy(x, y);
+      lowestEnergy = customEnergy(energies, x, y);
     }
-    if (isValid(x + 1, y) && customEnergy(x + 1, y) < lowestEnergy) {
+    if (isValid(x + 1, y) && customEnergy(energies, x + 1, y) < lowestEnergy) {
       bestIndex = x + 1;
-      lowestEnergy = customEnergy(x + 1, y);
+      lowestEnergy = customEnergy(energies, x + 1, y);
     }
 
     if (bestIndex == -1)    return x;
     else                    return bestIndex;
   }
 
-  private double customEnergy(int x, int y) {
+  private double customEnergy(double[][] energies, int x, int y) {
     if (verticalSeam)
     { return energies[x][y]; }
     else
     { return energies[y][x]; }
   }
 
-  private double totalEnergy(int[] seam) {
+  private double totalEnergy(double[][] energies, int[] seam) {
     double total = 0.00;
     if (verticalSeam) {
       for (int y = 0; y < seam.length; y++) {
@@ -253,6 +250,9 @@ public class SeamCarver {
       if (seam.length != height()) throw new IllegalArgumentException();
       if (width() <= 1)  throw new IllegalArgumentException("nothing to remove");
     }
+
+    double[][] energies = new double[width()][height()];
+    populateEnergies(energies);
 
     double[][] newEnergies;
     Color[][] newColors;
@@ -307,7 +307,6 @@ public class SeamCarver {
 
     // printEnergies(energies);
     // printSeam(seam);
-    energies = newEnergies;
     colors = newColors;
     // printEnergies(energies);
   }
