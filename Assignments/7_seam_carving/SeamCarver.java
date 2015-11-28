@@ -3,7 +3,6 @@ import edu.princeton.cs.algs4.StdOut;
 import java.awt.Color;
 
 public class SeamCarver {
-  private Picture picture;
   private double[][] energies;
   private Color[][] colors;
   private boolean verticalSeam;
@@ -12,15 +11,16 @@ public class SeamCarver {
   public SeamCarver(Picture picture) {
     if (picture == null)  throw new NullPointerException("picture cannot be null");
 
-    this.picture = picture;
     energies = new double[picture.width()][picture.height()];
     colors = new Color[picture.width()][picture.height()];
+
+    storeColors(picture);
     calculateEnergies();
     verticalSeam = true;
     // printEnergies(energies);
   }
 
-  // storing both energies and colors of every pixel
+  // storing energies of every pixel
   private void calculateEnergies() {
     // for every row/height/y
     for (int y = 0; y < height(); y++) {
@@ -28,15 +28,21 @@ public class SeamCarver {
       for (int x = 0; x < width(); x++) {
         // calculate its energy using formula
         energies[x][y] = energy(x, y);
-        // record the color value
-        colors[x][y] = picture.get(x, y);
       }
+    }
+  }
+
+  // storing colors of every pixel
+  private void storeColors(Picture picture) {
+    for (int y = 0; y < height(); y++) {
+      for (int x = 0; x < width(); x++)
+      { colors[x][y] = picture.get(x, y); }
     }
   }
 
   // current picture
   public Picture picture() {
-    picture = new Picture(width(), height());
+    Picture picture = new Picture(width(), height());
     for (int x = 0; x < width(); x++) {
       for (int y = 0; y < height(); y++) {
         Color color = colors[x][y];
@@ -81,12 +87,12 @@ public class SeamCarver {
   }
 
   private double calculateDeltaX(int x, int y) {
-    Color color1        = picture.get(x - 1, y);
+    Color color1        = colors[x - 1][y];
     int red1            = color1.getRed();
     int green1          = color1.getGreen();
     int blue1           = color1.getBlue();
 
-    Color color2        = picture.get(x + 1, y);
+    Color color2        = colors[x + 1][y];
     int red2            = color2.getRed();
     int green2          = color2.getGreen();
     int blue2           = color2.getBlue();
@@ -99,12 +105,12 @@ public class SeamCarver {
   }
 
   private double calculateDeltaY(int x, int y) {
-    Color color1      = picture.get(x, y - 1);
+    Color color1      = colors[x][y - 1];
     int red1          = color1.getRed();
     int green1        = color1.getGreen();
     int blue1         = color1.getBlue();
 
-    Color color2      = picture.get(x, y + 1);
+    Color color2      = colors[x][y + 1];
     int red2          = color2.getRed();
     int green2        = color2.getGreen();
     int blue2         = color2.getBlue();
