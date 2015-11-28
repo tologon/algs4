@@ -200,9 +200,9 @@ public class SeamCarver {
         total += energies[x][y];
       }
     } else {
-      for (int y = 0; y < seam.length; y++) {
-        int x = seam[y];
-        total += energies[y][x];
+      for (int x = 0; x < seam.length; x++) {
+        int y = seam[x];
+        total += energies[x][y];
       }
     }
     return total;
@@ -222,50 +222,81 @@ public class SeamCarver {
     if (seam == null)   throw new NullPointerException("h-seam cannot be null");
     if (seam.length != width()) throw new IllegalArgumentException();
     if (height() <= 1)  throw new IllegalArgumentException("nothing to remove");
-    // TODO add check for invalid seam pixels, throw IllegalArgumentException
 
+    verticalSeam = false;
+    removeVerticalSeam(seam);
+    verticalSeam = true;
   }
 
   // remove vertical seam from current picture
   public void removeVerticalSeam(int[] seam) {
-    if (seam == null)   throw new NullPointerException("v-seam cannot be null");
-    if (seam.length != height()) throw new IllegalArgumentException();
-    if (width() <= 1)  throw new IllegalArgumentException("nothing to remove");
+    if (verticalSeam) {
+      if (seam == null)   throw new NullPointerException("v-seam cannot be null");
+      if (seam.length != height()) throw new IllegalArgumentException();
+      if (width() <= 1)  throw new IllegalArgumentException("nothing to remove");
+    }
 
-    double[][] newEnergies = new double[width() - 1][height()];
+    double[][] newEnergies;
+    // necessary adjustments to check for horizontal vs. vertical seams
+    int width;
+    if (verticalSeam) {
+      newEnergies = new double[width() - 1][height()];
+      width = width();
+    } else {
+      newEnergies = new double[width()][height() - 1];
+      width = height();
+    }
+
     int x;
     for (int y = 0; y < seam.length; y++) {
       x = seam[y];
       if (!isValid(x, y))
       { throw new IllegalArgumentException("pixel is outside of prescribed range."); }
 
-      double[] originalRow = getRow(energies, energies.length, y);
-      double[] newRow = new double[newEnergies.length];
+      double[] originalRow = getRow(energies, width, y);
+      double[] newRow;
+      if (verticalSeam)
+      { newRow = new double[newEnergies.length]; }
+      else
+      { newRow = new double[newEnergies[0].length]; }
 
       // copy elements just before "deleted" seam pixel
       System.arraycopy(originalRow, 0, newRow, 0, x);
       // copy elements just after "deleted" seam pixel
-      System.arraycopy(originalRow, x + 1, newRow, x, width() - x - 1);
+      System.arraycopy(originalRow, x + 1, newRow, x, width - x - 1);
 
-      assignRow(newEnergies, newEnergies.length, y, newRow);
+      if (verticalSeam)
+      { assignRow(newEnergies, newEnergies.length, y, newRow); }
+      else
+      { assignRow(newEnergies, newEnergies[0].length, y, newRow); }
     }
 
-    printEnergies(energies);
-    printSeam(seam);
+    // printEnergies(energies);
+    // printSeam(seam);
     energies = newEnergies;
-    printEnergies(energies);
+    // printEnergies(energies);
   }
 
   private double[] getRow(double[][] energies, int width, int y) {
     double[] row = new double[width];
-    for (int x = 0; x < width; x++)
-    { row[x] = energies[x][y]; }
+    if (verticalSeam) {
+      for (int x = 0; x < width; x++)
+      { row[x] = energies[x][y]; }
+    } else {
+      for (int x = 0; x < width; x++)
+      { row[x] = energies[y][x]; }
+    }
     return row;
   }
 
   private void assignRow(double[][] energies, int width, int y, double[] row) {
-    for (int x = 0; x < width; x++)
-    { energies[x][y] = row[x]; }
+    if (verticalSeam) {
+      for (int x = 0; x < width; x++)
+      { energies[x][y] = row[x]; }
+    } else {
+      for (int x = 0; x < width; x++)
+      { energies[y][x] = row[x]; }
+    }
   }
 
   // use for debugging energy matrix
@@ -273,7 +304,7 @@ public class SeamCarver {
     StdOut.println("\n##### Printing energies #####");
     for (int y = 0; y < energies[0].length; y++) {
       for (int x = 0; x < energies.length; x++)
-      { StdOut.print(energies[x][y] + "\t"); }
+      { StdOut.printf("%7.2f ", energies[x][y]); }
       StdOut.println();
     }
     StdOut.println("\n##### End of energies #####");
