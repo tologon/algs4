@@ -25,4 +25,21 @@ public class BaseballElimination {
 
   // subset R of teams that eliminates given team; null if not eliminated
   public Iterable<String> certificateOfElimination(String team)
+
+  // unit testing
+  public static void main(String[] args) {
+    BaseballElimination division = new BaseballElimination(args[0]);
+    for (String team : division.teams()) {
+      if (division.isEliminated(team)) {
+        StdOut.println(team + " is eliminated by the subset R = { ");
+        for (String t : division.certificateOfElimination(team)) {
+          StdOut.print(t + " ");
+        }
+        StdOut.println("}");
+      }
+      else {
+        StdOut.println(team + " is not eliminated");
+      }
+    }
+  }
 }
