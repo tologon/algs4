@@ -1,3 +1,6 @@
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.In;
+
 public class BaseballElimination {
   // create a baseball division from given filename in format specified below
   public BaseballElimination(String filename)
